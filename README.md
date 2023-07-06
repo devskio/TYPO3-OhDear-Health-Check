@@ -19,12 +19,11 @@ The TYPO3 OhDear Health Check Extension allows you to monitor the health and per
 
 ## Installation
 
-1. Download the OhDear Health Check Extension package.
-2. Extract the package into the `typo3conf/ext/` directory of your TYPO3 installation.
-3. In the TYPO3 backend, navigate to the Extension Manager.
-4. Search for "OhDear Health Check" in the available extensions list.
-5. Click "Install" to install the extension.
-6. Once installed, go to the extension configuration settings and provide your Oh Dear API credentials.
+1. Run the following command to require the OhDear Health Check Extension via Composer: `composer require devskio/TYPO3-OhDear-Health-Check`
+2. In the TYPO3 backend, navigate to the Extension Manager.
+3. Search for "OhDear Health Check" in the available extensions list.
+4. Click "Install" to install the extension.
+5. Once installed, go to the extension configuration settings and provide your Oh Dear API credentials.
 
 ## Usage
 
