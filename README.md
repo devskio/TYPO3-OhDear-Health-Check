@@ -1,0 +1,43 @@
+# TYPO3 OhDear Health Check Extension
+
+The TYPO3 OhDear Health Check Extension allows you to monitor the health and performance of your TYPO3 application and server using Oh Dear. With this extension, you can receive alerts and notifications for critical issues, ensuring the smooth operation of your TYPO3 application.
+
+## Features
+
+- Disk Space: Monitors the disk space usage of your server.
+- PHP Error Log Size: Checks the size of the PHP error log.
+- TYPO3 Error Log Size: Checks the size of the TYPO3 error log.
+- MySQL Database Size: Checks the size of the MySQL database.
+- Forgotten Files on the Server: Scans the document root for forgotten files.
+- TYPO3 Database Log: Retrieves the TYPO3 database log.
+- TYPO3 Version: Retrieves the installed TYPO3 version.
+
+## Requirements
+
+- TYPO3 version 11.5.0 or later.
+- An active Oh Dear account with the necessary API credentials.
+
+## Installation
+
+1. Download the OhDear Health Check Extension package.
+2. Extract the package into the `typo3conf/ext/` directory of your TYPO3 installation.
+3. In the TYPO3 backend, navigate to the Extension Manager.
+4. Search for "OhDear Health Check" in the available extensions list.
+5. Click "Install" to install the extension.
+6. Once installed, go to the extension configuration settings and provide your Oh Dear API credentials.
+
+## Usage
+
+1. After installing and configuring the extension, you can access the OhDear Health Check dashboard.
+2. The dashboard displays the current status of various monitored aspects, such as disk space, PHP Error Log Size, TYPO3 Error Log Size, MySQL Database Size, Forgotten Files on the Server, TYPO3 Database Log, TYPO3 Version.
+3. Configure the desired alert thresholds and notification settings in OhDear.
+4. When an issue is detected, you will receive alerts through your preferred communication channels (e.g., email, Slack, SMS) based on your Oh Dear configuration.
+
+## Contributing
+
+Contributions to the TYPO3 OhDear Health Check Extension are welcome! If you encounter any bugs, have suggestions, or want to contribute new features, please submit a pull request or open an issue in the GitHub repository.
+
+## License
+
+This TYPO3 OhDear Health Check Extension is released under the [MIT License](LICENSE).
+
