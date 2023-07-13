@@ -1,0 +1,9 @@
+services:
+  #Dependencies injection activation
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Devsk\Typo3Tinypng\:
+    resource: '../Classes/*'

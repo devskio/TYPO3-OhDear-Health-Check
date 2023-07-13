@@ -1,0 +1,31 @@
+{
+  "name": "devskio/typo3-ohdear-health-check",
+  "type": "typo3-cms-extension",
+  "description": "TYPO3-OhDear-Health-Check extension",
+  "keywords": [
+    "TYPO3 CMS"
+  ],
+  "minimum-stability": "stable",
+  "version": "0.0.1",
+  "license": "GPL-2.0-or-later",
+  "autoload": {
+    "psr-4": {
+      "Devsk\\OhDear\\": "Classes/"
+    }
+  },
+  "replace": {
+    "digitalwerk/typo3-ohdear-health-check": "self.version"
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "typo3-ohdear-health-check"
+    }
+  },
+  "require": {
+    "typo3/cms-scheduler": "^11 || ^10 || ^9"
+  },
+  "config": {
+    "vendor-dir": "Resources/Private/Libraries"
+  }
+}
+

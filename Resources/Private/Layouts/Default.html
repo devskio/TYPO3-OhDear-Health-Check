@@ -1,0 +1,26 @@
+<f:be.container includeRequireJsModules="{1: '{f:uri.resource(path: \'JavaScript/main.js\')}'}">
+    <div class="typo3-fullDoc">
+        <div id="typo3-docheader">
+            <div class="typo3-docheader-functions">
+                <div class="left">
+                    <f:be.buttons.csh/>
+                </div>
+                <div class="right"></div>
+            </div>
+            <div class="typo3-docheader-buttons">
+                <div class="left"></div>
+                <div class="right"></div>
+            </div>
+        </div>
+        <div id="typo3-docbody">
+            <div id="typo3-inner-docbody">
+                <div class="container" style="max-width:800px; font-size: 1.3rem;">
+
+                    <f:flashMessages />
+
+                    <f:render section="content"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</f:be.container>
