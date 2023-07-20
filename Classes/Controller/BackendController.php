@@ -28,7 +28,7 @@ class BackendController extends ActionController
     /**
      * Action to perform the health check and return the data as JSON.
      */
-    public function runAction(): void
+    public function runAction(): string
     {
         $checkResults = new CheckResults(DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s')));
 
@@ -40,7 +40,7 @@ class BackendController extends ActionController
         $checkResults->addCheckResult($this->healthCheckService->getTYPO3DBLog());
         $checkResults->addCheckResult($this->healthCheckService->getTYPO3Version());
 
-        echo $checkResults->toJson();
+        return $checkResults->toJson();
     }
 
 }
