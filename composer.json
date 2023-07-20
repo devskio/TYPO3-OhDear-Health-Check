@@ -23,6 +23,8 @@
   },
   "config": {
     "vendor-dir": "Resources/Private/Libraries"
+  },
+  "require": {
+    "ohdearapp/health-check-results": "^1.0"
   }
 }
-
