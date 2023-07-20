@@ -3,6 +3,7 @@ typo3_oh_dear_health_check {
     typeNum = 1689678601
 
     config {
+        no_cache = 1
         cache_period = 900
         disableAllHeaderCode = 1
         admPanel = 0
