@@ -107,6 +107,7 @@ class OhDearHealthCheckService
     public function checkPHPErrorLogSize(): CheckResult
     {
         $errorLogPath = ini_get('error_log');
+        $errorLogFilesizeReadable = 0;
 
         // Check if the error log file exists
         if (file_exists($errorLogPath)) {
