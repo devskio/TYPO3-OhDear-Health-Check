@@ -1,0 +1,20 @@
+typo3_oh_dear_health_check = PAGE
+typo3_oh_dear_health_check {
+    typeNum = 1689678601
+
+    config {
+        cache_period = 900
+        disableAllHeaderCode = 1
+        admPanel = 0
+        removeDefaultJS = 1
+        removeDefaultCss = 1
+        removePageCss = 1
+        additionalHeaders {
+            10.header = Content-Type:application/json;charset=utf-8
+            20.header = X-Robots-Tag:noindex
+        }
+    }
+
+    10 = USER
+    10.userFunc = Devskio\Typo3OhDearHealthCheck\Controller\BackendController->runAction
+}
