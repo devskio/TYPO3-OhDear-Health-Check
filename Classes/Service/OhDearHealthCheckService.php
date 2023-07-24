@@ -240,12 +240,12 @@ class OhDearHealthCheckService
                         // list 5 biggest tables
                         $query2 = $queryBuilder
                             ->selectLiteral('table_name AS "Table"')
-                            ->addSelectLiteral('ROUND((data_length + index_length) / (1024 * 1024), 2) AS `Size (MB)`')
+                            ->addSelectLiteral('ROUND(SUM(data_length + index_length) / (1024 * 1024), 2) AS "Size (MB)"')
                             ->from('information_schema.tables')
                             ->where(
                                 $queryBuilder->expr()->eq('table_schema', $queryBuilder->createNamedParameter($databaseConfig['dbname']))
                             )
-                            ->groupBy('table_name') // Add this line to group the results by table_name
+                            ->groupBy('table_name')
                             ->orderBy('Size (MB)', 'DESC')
                             ->setMaxResults(5);
 
