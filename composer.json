@@ -6,7 +6,7 @@
     "TYPO3 CMS"
   ],
   "minimum-stability": "stable",
-  "version": "11.0.9",
+  "version": "11.0.8",
   "license": "GPL-2.0-or-later",
   "autoload": {
     "psr-4": {
@@ -22,13 +22,10 @@
     }
   },
   "config": {
-    "vendor-dir": "Resources/Private/Libraries",
-    "platform": {
-      "php": "7.4 || 8"
-    }
+    "vendor-dir": "Resources/Private/Libraries"
   },
   "require": {
     "typo3/cms-core": "^10 || ^11",
-    "ohdearapp/health-check-results": "^11"
+    "ohdearapp/health-check-results": "^1.0"
   }
 }
