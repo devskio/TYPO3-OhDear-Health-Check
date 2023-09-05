@@ -18,14 +18,21 @@
   },
   "extra": {
     "typo3/cms": {
+      "web-dir": ".Build/web",
       "extension-key": "typo3_ohdear_health_check"
     }
   },
   "config": {
-    "vendor-dir": "Resources/Private/Libraries"
+    "vendor-dir": ".Build/vendor",
+    "bin-dir": ".Build/bin",
+    "allow-plugins": {
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
+    }
   },
   "require": {
     "typo3/cms-core": "^10 || ^11",
+    "typo3/cms-extbase": "^10 || ^11",
     "ohdearapp/health-check-results": "^1.0"
   }
 }

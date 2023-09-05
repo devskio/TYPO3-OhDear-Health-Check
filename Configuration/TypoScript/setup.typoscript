@@ -17,5 +17,5 @@ typo3_oh_dear_health_check {
     }
 
     10 = USER
-    10.userFunc = Devskio\Typo3OhDearHealthCheck\Controller\BackendController->runAction
+    10.userFunc = Devskio\Typo3OhDearHealthCheck\Core\HealthCheck->run
 }

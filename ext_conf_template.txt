@@ -1,2 +1,2 @@
-# cat=basic/11; type=string; label=Oh Dear Health Check Secret
+# cat=basic; type=string; label=Health Report Secret
 ohdearHealthCheckSecret=
