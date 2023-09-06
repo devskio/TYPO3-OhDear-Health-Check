@@ -35,7 +35,7 @@ class HealthCheck extends ActionController
      * Action to perform the health check and return the data as JSON.
      * @throws PropagateResponseException
      */
-    public function run(string $content, array $conf, ServerRequestInterface $request): Response | string
+    public function run(string $content, array $conf, ServerRequestInterface $request): string
     {
         if (!$this->checkSecret($request)) {
             $this->throwStatus(403, 'Forbidden');
@@ -45,7 +45,7 @@ class HealthCheck extends ActionController
 
         $checkResults->addCheckResult($this->healthCheckService->getUsedDiskSpace());
         $checkResults->addCheckResult($this->healthCheckService->checkPHPErrorLogSize());
-        $checkResults->addCheckResult($this->healthCheckService->getTYPO3ErrorLogSize());
+        $checkResults->addCheckResult($this->healthCheckService->getTYPO3VarFolderSize());
         $checkResults->addCheckResult($this->healthCheckService->getMysqlSize());
         $checkResults->addCheckResult($this->healthCheckService->scanDocumentRootForForgottenFiles());
         $checkResults->addCheckResult($this->healthCheckService->getTYPO3DBLog());

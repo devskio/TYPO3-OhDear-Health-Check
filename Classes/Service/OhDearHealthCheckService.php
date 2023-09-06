@@ -16,6 +16,7 @@ namespace Devskio\Typo3OhDearHealthCheck\Service;
  */
 
 use OhDear\HealthCheckResults\CheckResult;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -138,54 +139,68 @@ class OhDearHealthCheckService
     }
 
     /**
-     * Function to get number and size of TYPO3 error logs
+     * Function to get the size of the TYPO3 var folder.
      */
-    public function getTYPO3ErrorLogSize(): CheckResult
+    public function getTYPO3VarFolderSize(): CheckResult
     {
-        $logFolderPath = '../var/log/';
-        $files = scandir($logFolderPath);
-        $files = array_diff($files, ['.', '..']);
-        $fullLogsSize = 0;
+        function getFolderSize($folder) {
+            $totalSize = 0;
 
-        // Check if the error log file exists
-        if (!empty($files)) {
-            foreach ($files as $file) {
-                $filePath = $logFolderPath . '/' . $file;
-
-                // Check if the item is a file (not a directory)
-                if (is_file($filePath)) {
-                    // Get the file size in bytes
-                    $fileSizeBytes = filesize($filePath);
-
-                    // Convert file size to MB
-                    $fullLogsSize += round($fileSizeBytes / (1024 * 1024), 2);
-                }
+            // Check if the folder exists
+            if (!is_dir($folder)) {
+                return false;
             }
 
+            // Open the folder
+            if ($handle = opendir($folder)) {
+                while (false !== ($entry = readdir($handle))) {
+                    if ($entry != "." && $entry != "..") {
+                        $entryPath = $folder . DIRECTORY_SEPARATOR . $entry;
+
+                        if (is_dir($entryPath)) {
+                            // If it's a subdirectory, recursively calculate its size
+                            $totalSize += getFolderSize($entryPath);
+                        } elseif (is_file($entryPath)) {
+                            // If it's a file, add its size to the total
+                            $totalSize += filesize($entryPath);
+                        }
+                    }
+                }
+                closedir($handle);
+            }
+
+            return $totalSize;
+        }
+
+        $varFolderSize = getFolderSize(Environment::getVarPath());
+
+        if ($varFolderSize !== false) {
             // 500 MB
-            if ($fullLogsSize > 524288000) {
+            if ($varFolderSize > 524288000) {
                 $status = CheckResult::STATUS_FAILED;
-            } else if ($fullLogsSize > 52428800) { // 50 MB
+            } else if ($varFolderSize > 52428800) { // 50 MB
                 $status = CheckResult::STATUS_WARNING;
             } else {
                 $status = CheckResult::STATUS_OK;
             }
 
-            return $this->createHealthCheckResult(
-                'TYPO3ErrorLogSize',
-                'TYPO3 Error Log Size',
-                $status,
-                'ErrorLogFilesize: ' . $status . ' (' . $fullLogsSize . 'MB)',
-                'Error Log Filesize: ' . $status . ' (' . $fullLogsSize . 'MB)',
-                ['error_log_filesize' => $fullLogsSize]
-            );
+            // Convert file size to MB
+            $varFolderSize = round($varFolderSize / (1024 * 1024), 2);
 
+            return $this->createHealthCheckResult(
+                'TYPO3VarFolderSize',
+                'TYPO3 Var Folder Size',
+                $status,
+                'TYPO3VarFolderSize: ' . $status . ' (' . $varFolderSize . 'MB)',
+                'TYPO3 Var Folder Size: ' . $status . ' (' . $varFolderSize . 'MB)',
+                ['var_folder_size' => $varFolderSize]
+            );
         } else {
             return $this->createHealthCheckResult(
-                'PHPErrorLogSize',
-                'PHP Error Log Size',
+                'TYPO3VarFolderSize',
+                'TYPO3 Var Folder Size',
                 CheckResult::STATUS_SKIPPED,
-                'Error Log File Not Found',
+                'Var Folder Not Found',
                 'SKIPPED',
                 []
             );
