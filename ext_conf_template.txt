@@ -21,5 +21,5 @@ databaseSizeWarningThresholdError=500000000
 # cat=basic; type=string; label=Database Size Warning Threshold in bytes (50MB)
 databaseSizeWarningThresholdWarning=50000000
 
-# cat=basic; type=textarea; label=Allowed Files
+# cat=basic; type=user[Devskio\Typo3OhDearHealthCheck\ViewHelpers\CustomFields\Textarea->render]; label=Allowed Files
 allowedFiles=
