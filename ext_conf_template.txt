@@ -1,2 +1,25 @@
 # cat=basic; type=string; label=Health Report Secret
 ohdearHealthCheckSecret=
+
+# cat=basic; type=string; label=Disk Space Error Threshold (90%)
+diskSpaceWarningThresholdError=90
+# cat=basic; type=string; label=Disk Space Warning Threshold (75%)
+diskSpaceWarningThresholdWarning=75
+
+# cat=basic; type=string; label=Error Log Size Error Threshold in bytes (500MB)
+errorLogSizeWarningThresholdError=500000000
+# cat=basic; type=string; label=Error Log Size Warning Threshold in bytes (50MB)
+errorLogSizeWarningThresholdWarning=50000000
+
+# cat=basic; type=string; label=Var Folder Size Error Threshold in bytes (500MB)
+varFolderSizeWarningThresholdError=500000000
+# cat=basic; type=string; label=Var Folder Size Warning Threshold in bytes (50MB)
+varFolderSizeWarningThresholdWarning=50000000
+
+# cat=basic; type=string; label=Database Size Error Threshold in bytes (500MB)
+databaseSizeWarningThresholdError=500000000
+# cat=basic; type=string; label=Database Size Warning Threshold in bytes (50MB)
+databaseSizeWarningThresholdWarning=50000000
+
+# cat=basic; type=textarea; label=Allowed Files
+allowedFiles=

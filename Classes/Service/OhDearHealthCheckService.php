@@ -19,6 +19,7 @@ use OhDear\HealthCheckResults\CheckResult;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
  * Class OhDearHealthCheckService
@@ -30,31 +31,25 @@ class OhDearHealthCheckService
     private $typo3VersionInstalled = '';
     private $typo3VersionInstalledMajor = '';
     private $typo3VersionLatest = '';
-    private $ohdearHealthCheckSecrets = [
-        'eurospine' => 'fy6c46anNuvU3SYh',
-    ];
 
+    public function __construct(
+        private ExtensionConfiguration $extensionConfiguration
+    ) {
+        $extensionConfig = $this->extensionConfiguration->get('typo3_ohdear_health_check');
 
-// Function to check if the "oh-dear-health-check-secret" header value matches
-    public function checkSecret() {
-        $headerKey = "oh-dear-health-check-secret";
-        $expectedValue = "fy6c46anNuvU3SYh";
-        // Check if the header exists
-        if (isset($_SERVER['HTTP_' . str_replace('-', '_', strtoupper($headerKey))])) {
-            // Get the header value
-            $headerValue = $_SERVER['HTTP_' . str_replace('-', '_', strtoupper($headerKey))];
+        $this->diskSpaceWarningThresholdError = $extensionConfig['diskSpaceWarningThresholdError'];
+        $this->diskSpaceWarningThresholdWarning = $extensionConfig['diskSpaceWarningThresholdWarning'];
 
-            foreach($this->ohdearHealthCheckSecrets as $key=>$expectedValue) {
-                // Compare the header value with the expected value
-                if ($headerValue === $expectedValue) {
-                    return true;
-                }
-            }
-        }
+        $this->errorLogSizeWarningThresholdError = $extensionConfig['errorLogSizeWarningThresholdError'];
+        $this->errorLogSizeWarningThresholdWarning = $extensionConfig['errorLogSizeWarningThresholdWarning'];
 
-        // disable access if not authorized
-        header("HTTP/1.1 401 Unauthorized");
-        exit;
+        $this->varFolderSizeWarningThresholdError = $extensionConfig['varFolderSizeWarningThresholdError'];
+        $this->varFolderSizeWarningThresholdWarning = $extensionConfig['varFolderSizeWarningThresholdWarning'];
+
+        $this->databaseSizeWarningThresholdError = $extensionConfig['databaseSizeWarningThresholdError'];
+        $this->databaseSizeWarningThresholdWarning = $extensionConfig['databaseSizeWarningThresholdWarning'];
+
+        $this->allowedFiles = explode("\n", $extensionConfig['allowedFiles']);
     }
 
     /**
@@ -84,9 +79,9 @@ class OhDearHealthCheckService
         $usedSpaceInPercentage = round($percentage, 2); // Round to 2 decimal places
 
         // Set the status
-        if (intval($usedSpaceInPercentage) > 90) {
+        if (intval($usedSpaceInPercentage) > $this->diskSpaceWarningThresholdError) {
             $status = CheckResult::STATUS_FAILED;
-        } else if (intval($usedSpaceInPercentage) > 75) {
+        } else if (intval($usedSpaceInPercentage) > $this->diskSpaceWarningThresholdWarning) {
             $status = CheckResult::STATUS_WARNING;
         } else {
             $status = CheckResult::STATUS_OK;
@@ -118,9 +113,9 @@ class OhDearHealthCheckService
             $errorLogFilesizeReadable = $this->formatBytes($errorLogFilesize);
 
             // Determine the status based on the filesize
-            if ($errorLogFilesize > 524288000) {
+            if ($errorLogFilesize > $this->errorLogSizeWarningThresholdError) {
                 $status = CheckResult::STATUS_FAILED;
-            } else if ($errorLogFilesize > 52428800) {   // 50 MB
+            } else if ($errorLogFilesize > $this->errorLogSizeWarningThresholdWarning) {   // 50 MB
                 $status = CheckResult::STATUS_WARNING;
             } else {
                 $status = CheckResult::STATUS_OK;
@@ -176,9 +171,9 @@ class OhDearHealthCheckService
 
         if ($varFolderSize !== false) {
             // 500 MB
-            if ($varFolderSize > 524288000) {
+            if ($varFolderSize > $this->varFolderSizeWarningThresholdError) {
                 $status = CheckResult::STATUS_FAILED;
-            } else if ($varFolderSize > 52428800) { // 50 MB
+            } else if ($varFolderSize > $this->varFolderSizeWarningThresholdWarning) { // 50 MB
                 $status = CheckResult::STATUS_WARNING;
             } else {
                 $status = CheckResult::STATUS_OK;
@@ -244,9 +239,9 @@ class OhDearHealthCheckService
                         $sizeInMB = round($sizeInBytes / (1024 * 1024), 2);
 
                         // 5000 MB
-                        if ($sizeInMB > 5242880000) {
+                        if ($sizeInBytes > $this->databaseSizeWarningThresholdError) {
                             $status = CheckResult::STATUS_FAILED;
-                        } elseif ($sizeInMB > 4194304000) {
+                        } elseif ($sizeInBytes > $this->databaseSizeWarningThresholdWarning) {
                             $status = CheckResult::STATUS_WARNING;
                         } else {
                             $status = CheckResult::STATUS_OK;
@@ -310,35 +305,22 @@ class OhDearHealthCheckService
 
     /**
      * Scan a specified folder for commonly forgotten files or folders by developers.
-     * TODO: Refactor and use allowed filename patterns instead of disallowed
      *
      * @return CheckResult
      */
     public function scanDocumentRootForForgottenFiles(): CheckResult
     {
-        // Array of commonly forgotten patterns
-        $patterns = array(
-            'phpinfo',
-            'pma',
-            'phpmyadmin',
-            'adminer',
-            'backup',
-            'bkp',
-            'bak',
-            'log',
-            'old',
-            'test',
-            'tmp',
-            'dev',
-            'dump',
-            'demo',
-            'backup',
-            'unused',
-            'tgz',
-            'zip',
-            'sql',
-            'csv'
-        );
+        // Array of allowed patterns
+        $allowedFiles = array_merge($this->allowedFiles, array(
+            '.htaccess',
+            'index.php',
+            'license.txt',
+            'fileadmin',
+            'mailing',
+            'typo3',
+            'typo3conf',
+            'typo3temp',
+        ));
 
         // Initialize count variable
         $count = 0;
@@ -350,14 +332,18 @@ class OhDearHealthCheckService
         foreach ($items as $item) {
             // Exclude "." and ".." directories
             if ($item !== '.' && $item !== '..') {
-                // Check if the item matches any of the patterns
-                foreach ($patterns as $pattern) {
+                // Check if the item does not match any of the patterns
+                $isAllowed = false;
+                foreach ($allowedFiles as $pattern) {
                     if (stripos($item, $pattern) !== false) {
-                        // Save the matched item
-                        $this->forgottenFilesList[] = $item;
-                        $count++;
+                        $isAllowed = true;
                         break;
                     }
+                }
+                if (!$isAllowed) {
+                    // Save the unmatched item
+                    $this->forgottenFilesList[] = $item;
+                    $count++;
                 }
             }
         }
@@ -368,17 +354,17 @@ class OhDearHealthCheckService
                 'ForgottenFiles',
                 'Forgotten Files',
                 CheckResult::STATUS_FAILED,
-                'Found ' . $count . ' forgotten files or folders',
-                $count . ' forgotten files',
-                ['forgotten_files_list' => $this->forgottenFilesList]
+                'Found ' . $count . ' unallowed files or folders',
+                $count . ' unallowed files',
+                ['unallowed_files_list' => $this->forgottenFilesList]
             );
         } else {
             return $this->createHealthCheckResult(
                 'ForgottenFiles',
                 'Forgotten Files',
                 CheckResult::STATUS_OK,
-                'No forgotten files or folders found',
-                'No forgotten files found',
+                'No unallowed files or folders found',
+                'No unallowed files found',
                 []
             );
         }
