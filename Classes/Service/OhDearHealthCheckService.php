@@ -335,7 +335,7 @@ class OhDearHealthCheckService
                 // Check if the item does not match any of the patterns
                 $isAllowed = false;
                 foreach ($allowedFiles as $pattern) {
-                    if (stripos($item, $pattern) !== false) {
+                    if (fnmatch($pattern, $item)) {
                         $isAllowed = true;
                         break;
                     }
