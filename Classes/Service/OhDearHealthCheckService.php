@@ -37,19 +37,19 @@ class OhDearHealthCheckService
     ) {
         $extensionConfig = $this->extensionConfiguration->get('typo3_ohdear_health_check');
 
-        $this->diskSpaceWarningThresholdError = $extensionConfig['diskSpaceWarningThresholdError'];
-        $this->diskSpaceWarningThresholdWarning = $extensionConfig['diskSpaceWarningThresholdWarning'];
+        $this->diskSpaceWarningThresholdError = $extensionConfig['diskSpaceWarningThresholdError'] ?? '';
+        $this->diskSpaceWarningThresholdWarning = $extensionConfig['diskSpaceWarningThresholdWarning'] ?? '';
 
-        $this->errorLogSizeWarningThresholdError = $extensionConfig['errorLogSizeWarningThresholdError'];
-        $this->errorLogSizeWarningThresholdWarning = $extensionConfig['errorLogSizeWarningThresholdWarning'];
+        $this->errorLogSizeWarningThresholdError = $extensionConfig['errorLogSizeWarningThresholdError'] ?? '';
+        $this->errorLogSizeWarningThresholdWarning = $extensionConfig['errorLogSizeWarningThresholdWarning'] ?? '';
 
-        $this->varFolderSizeWarningThresholdError = $extensionConfig['varFolderSizeWarningThresholdError'];
-        $this->varFolderSizeWarningThresholdWarning = $extensionConfig['varFolderSizeWarningThresholdWarning'];
+        $this->varFolderSizeWarningThresholdError = $extensionConfig['varFolderSizeWarningThresholdError'] ?? '';
+        $this->varFolderSizeWarningThresholdWarning = $extensionConfig['varFolderSizeWarningThresholdWarning'] ?? '';
 
-        $this->databaseSizeWarningThresholdError = $extensionConfig['databaseSizeWarningThresholdError'];
-        $this->databaseSizeWarningThresholdWarning = $extensionConfig['databaseSizeWarningThresholdWarning'];
+        $this->databaseSizeWarningThresholdError = $extensionConfig['databaseSizeWarningThresholdError'] ?? '';
+        $this->databaseSizeWarningThresholdWarning = $extensionConfig['databaseSizeWarningThresholdWarning'] ?? '';
 
-        $this->allowedFiles = array_filter(array_map('trim', explode("\n", $extensionConfig['allowedFiles'])));
+        $this->allowedFiles = explode("\n", $extensionConfig['allowedFiles'] ?? '');
     }
 
     /**
