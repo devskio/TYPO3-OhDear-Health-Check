@@ -64,7 +64,7 @@ class HealthCheck extends ActionController
     {
         $extensionConfig = $this->extensionConfiguration->get('typo3_ohdear_health_check');
         $ohdearSecretConfig = $extensionConfig['ohdearHealthCheckSecret'];
-        $ohdearSecretHeader = $request->getHeader('oh-dear-health-check-secret')[0];
+        $ohdearSecretHeader = $request->getHeader('oh-dear-health-check-secret')[0] ?? '';
 
         return !empty($ohdearSecretConfig) && $ohdearSecretConfig === $ohdearSecretHeader;
     }

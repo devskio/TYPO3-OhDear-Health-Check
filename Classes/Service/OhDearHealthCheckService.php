@@ -49,7 +49,7 @@ class OhDearHealthCheckService
         $this->databaseSizeWarningThresholdError = $extensionConfig['databaseSizeWarningThresholdError'] ?? '';
         $this->databaseSizeWarningThresholdWarning = $extensionConfig['databaseSizeWarningThresholdWarning'] ?? '';
 
-        $this->allowedFiles = explode("\n", $extensionConfig['allowedFiles'] ?? '');
+        $this->allowedFiles = array_map('trim', explode("\n", $extensionConfig['allowedFiles'] ?? ''));
     }
 
     /**
