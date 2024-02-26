@@ -55,7 +55,7 @@ class OhDearHealthCheckService
 
         if (
             isset($extensionConfig['diskSpaceWarningCustomCheckEnabled'])
-            && $extensionConfig['diskSpaceWarningCustomCheckEnabled'] === true
+            && $extensionConfig['diskSpaceWarningCustomCheckEnabled']
             && isset($extensionConfig['diskSpaceWarningThresholdError'])
         ) {
             $this->diskSpaceWarningThresholdError = $extensionConfig['diskSpaceWarningThresholdError'];
@@ -67,7 +67,7 @@ class OhDearHealthCheckService
 
         if (
             isset($extensionConfig['errorLogSizeWarningCustomCheckEnabled'])
-            && $extensionConfig['errorLogSizeWarningCustomCheckEnabled'] === true
+            && $extensionConfig['errorLogSizeWarningCustomCheckEnabled']
             && isset($extensionConfig['errorLogSizeWarningThresholdError'])
         ) {
             $this->errorLogSizeWarningThresholdError = $extensionConfig['errorLogSizeWarningThresholdError'];
@@ -79,7 +79,7 @@ class OhDearHealthCheckService
 
         if (
             isset($extensionConfig['varFolderSizeWarningCustomCheckEnabled'])
-            && $extensionConfig['varFolderSizeWarningCustomCheckEnabled'] === true
+            && $extensionConfig['varFolderSizeWarningCustomCheckEnabled']
             && isset($extensionConfig['varFolderSizeWarningThresholdError'])
         ) {
             $this->varFolderSizeWarningThresholdError = $extensionConfig['varFolderSizeWarningThresholdError'];
@@ -91,7 +91,7 @@ class OhDearHealthCheckService
 
         if (
             isset($extensionConfig['databaseSizeWarningCustomCheckEnabled'])
-            && $extensionConfig['databaseSizeWarningCustomCheckEnabled'] === true
+            && $extensionConfig['databaseSizeWarningCustomCheckEnabled']
             && isset($extensionConfig['databaseSizeWarningThresholdError'])
         ) {
             $this->databaseSizeWarningThresholdError = $extensionConfig['databaseSizeWarningThresholdError'];
@@ -103,7 +103,7 @@ class OhDearHealthCheckService
 
         if (
             isset($extensionConfig['allowedFilesWarningCustomCheckEnabled'])
-            && $extensionConfig['allowedFilesWarningCustomCheckEnabled'] === true
+            && $extensionConfig['allowedFilesWarningCustomCheckEnabled']
             && isset($extensionConfig['allowedFiles'])
         ) {
             $this->allowedFiles = array_map('trim', explode("\n", $extensionConfig['allowedFiles']));
