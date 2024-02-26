@@ -21,6 +21,8 @@ class HealthCheck extends ActionController
 {
     use InjectOhDearHealthCheckService;
 
+    const CACHE_IDENTIFIER = 'healthcheck_result';
+
     /**
      * @var OhDearHealthCheckService
      */
@@ -49,9 +51,7 @@ class HealthCheck extends ActionController
             $this->throwStatus(403, 'Forbidden');
         }
 
-        $cacheIdentifier = 'healthcheck_result';
-        $cachedResult = $this->cache->get($cacheIdentifier);
-
+        $cachedResult = $this->cache->get(self::CACHE_IDENTIFIER);
         if ($cachedResult !== false) {
             return $cachedResult;
         }
@@ -68,7 +68,7 @@ class HealthCheck extends ActionController
 
         $result = $checkResults->toJson();
 
-        $this->cache->set($cacheIdentifier, $result, [], 3600);
+        $this->cache->set(self::CACHE_IDENTIFIER, $result, [], 3600);
         return $result;
     }
 
