@@ -11,6 +11,8 @@ use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use Devskio\Typo3OhDearHealthCheck\Events\CustomHealthCheckEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Http\Response;
 
 /**
@@ -21,7 +23,7 @@ class HealthCheck extends ActionController
 {
     use InjectOhDearHealthCheckService;
 
-    const CACHE_IDENTIFIER = 'healthcheck_result';
+    const CACHE_IDENTIFIER = 'typo3_ohdear_health_check';
 
     /**
      * @var OhDearHealthCheckService
@@ -33,12 +35,19 @@ class HealthCheck extends ActionController
      */
     protected $cache;
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
     public function __construct(
         private ExtensionConfiguration $extensionConfiguration,
-        OhDearHealthCheckService $healthCheckService
+        OhDearHealthCheckService $healthCheckService,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->healthCheckService = $healthCheckService;
         $this->cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('typo3_ohdear_health_check');
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -67,6 +76,9 @@ class HealthCheck extends ActionController
         $checkResults->addCheckResult($this->healthCheckService->scanDocumentRootForForgottenFiles());
         $checkResults->addCheckResult($this->healthCheckService->getTYPO3DBLog());
         $checkResults->addCheckResult($this->healthCheckService->getTYPO3Version());
+
+        $event = new CustomHealthCheckEvent($checkResults);
+        $this->eventDispatcher->dispatch($event);
 
         $result = $checkResults->toJson() ?? "";
 

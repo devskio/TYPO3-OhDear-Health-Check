@@ -28,19 +28,19 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 class OhDearHealthCheckService
 {
     const DEFAULT_THRESHOLDS = [
-        'diskSpaceWarningCustomCheckEnabled' => false,
+        'diskSpaceWarningCustomCheckEnabled' => true,
         'diskSpaceWarningThresholdError' => 90,
         'diskSpaceWarningThresholdWarning' => 80,
-        'errorLogSizeWarningCustomCheckEnabled' => false,
+        'errorLogSizeWarningCustomCheckEnabled' => true,
         'errorLogSizeWarningThresholdError' => 10000000,
         'errorLogSizeWarningThresholdWarning' => 5000000,
-        'varFolderSizeWarningCustomCheckEnabled' => false,
+        'varFolderSizeWarningCustomCheckEnabled' => true,
         'varFolderSizeWarningThresholdError' => 500000000,
         'varFolderSizeWarningThresholdWarning' => 50000000,
-        'databaseSizeWarningCustomCheckEnabled' => false,
+        'databaseSizeWarningCustomCheckEnabled' => true,
         'databaseSizeWarningThresholdError' => 5000000000,
         'databaseSizeWarningThresholdWarning' => 500000000,
-        'allowedFilesWarningCustomCheckEnabled' => false,
+        'allowedFilesWarningCustomCheckEnabled' => true,
         'allowedFiles' => [],
     ];
     private $forgottenFilesList = array();
