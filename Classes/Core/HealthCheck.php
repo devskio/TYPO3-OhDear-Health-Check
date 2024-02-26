@@ -6,7 +6,9 @@ use Devskio\Typo3OhDearHealthCheck\Service\OhDearHealthCheckService;
 use Devskio\Typo3OhDearHealthCheck\Traits\Injection\InjectOhDearHealthCheckService;
 use OhDear\HealthCheckResults\CheckResults;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Http\PropagateResponseException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Http\Response;
@@ -24,11 +26,17 @@ class HealthCheck extends ActionController
      */
     protected $healthCheckService;
 
+    /**
+     * @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+     */
+    protected $cache;
+
     public function __construct(
         private ExtensionConfiguration $extensionConfiguration,
         OhDearHealthCheckService $healthCheckService
     ) {
-        $this->healthCheckService = $healthCheckService;;
+        $this->healthCheckService = $healthCheckService;
+        $this->cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('typo3_ohdear_health_check');
     }
 
     /**
@@ -41,6 +49,13 @@ class HealthCheck extends ActionController
             $this->throwStatus(403, 'Forbidden');
         }
 
+        $cacheIdentifier = 'healthcheck_result';
+        $cachedResult = $this->cache->get($cacheIdentifier);
+
+        if ($cachedResult !== false) {
+            return $cachedResult;
+        }
+
         $checkResults = new CheckResults(DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s')));
 
         $checkResults->addCheckResult($this->healthCheckService->getUsedDiskSpace());
@@ -51,7 +66,10 @@ class HealthCheck extends ActionController
         $checkResults->addCheckResult($this->healthCheckService->getTYPO3DBLog());
         $checkResults->addCheckResult($this->healthCheckService->getTYPO3Version());
 
-        return $checkResults->toJson();
+        $result = $checkResults->toJson();
+
+        $this->cache->set($cacheIdentifier, $result, [], 3600);
+        return $result;
     }
 
 
