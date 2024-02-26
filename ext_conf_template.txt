@@ -1,25 +1,35 @@
 # cat=basic; type=string; label=Health Report Secret
 ohdearHealthCheckSecret=
 
+# cat=Disk space; type=boolean; label=Enable Disk Space Check
+diskSpaceWarningCustomCheckEnabled=false
 # cat=Disk space; type=string; label=Disk Space Error Threshold (90%)
 diskSpaceWarningThresholdError=90
 # cat=Disk space; type=string; label=Disk Space Warning Threshold (75%)
 diskSpaceWarningThresholdWarning=75
 
+# cat=Logs; type=boolean; label=Enable error log size check
+errorLogSizeWarningCustomCheckEnabled=false
 # cat=Logs; type=string; label=Error Log Size Error Threshold in bytes (500MB)
 errorLogSizeWarningThresholdError=500000000
 # cat=Logs; type=string; label=Error Log Size Warning Threshold in bytes (50MB)
 errorLogSizeWarningThresholdWarning=50000000
 
+# cat=Var folder; type=boolean; label=Var Folder Size Check
+varFolderSizeWarningCustomCheckEnabled=false
 # cat=Var folder; type=string; label=Var Folder Size Error Threshold in bytes (500MB)
 varFolderSizeWarningThresholdError=500000000
 # cat=Var folder; type=string; label=Var Folder Size Warning Threshold in bytes (50MB)
 varFolderSizeWarningThresholdWarning=50000000
 
+# cat=Database; type=boolean; label=Database Size Check
+databaseSizeWarningCustomCheckEnabled=false
 # cat=Database; type=string; label=Database Size Error Threshold in bytes (500MB)
 databaseSizeWarningThresholdError=500000000
 # cat=Database; type=string; label=Database Size Warning Threshold in bytes (50MB)
 databaseSizeWarningThresholdWarning=50000000
 
+# cat=Allowed server files; type=boolean; label=Allowed Files Check
+allowedFilesWarningCustomCheckEnabled=false
 # cat=Allowed server files; type=user[Devskio\Typo3OhDearHealthCheck\ViewHelpers\CustomFields\Textarea->render]; label=Allowed Files
 allowedFiles=

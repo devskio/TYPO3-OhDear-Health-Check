@@ -27,6 +27,22 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
  */
 class OhDearHealthCheckService
 {
+    const DEFAULT_THRESHOLDS = [
+        'diskSpaceWarningCustomCheckEnabled' => false,
+        'diskSpaceWarningThresholdError' => 90,
+        'diskSpaceWarningThresholdWarning' => 80,
+        'errorLogSizeWarningCustomCheckEnabled' => false,
+        'errorLogSizeWarningThresholdError' => 10000000,
+        'errorLogSizeWarningThresholdWarning' => 5000000,
+        'varFolderSizeWarningCustomCheckEnabled' => false,
+        'varFolderSizeWarningThresholdError' => 500000000,
+        'varFolderSizeWarningThresholdWarning' => 50000000,
+        'databaseSizeWarningCustomCheckEnabled' => false,
+        'databaseSizeWarningThresholdError' => 5000000000,
+        'databaseSizeWarningThresholdWarning' => 500000000,
+        'allowedFilesWarningCustomCheckEnabled' => false,
+        'allowedFiles' => [],
+    ];
     private $forgottenFilesList = array();
     private $typo3VersionInstalled = '';
     private $typo3VersionInstalledMajor = '';
@@ -37,19 +53,63 @@ class OhDearHealthCheckService
     ) {
         $extensionConfig = $this->extensionConfiguration->get('typo3_ohdear_health_check');
 
-        $this->diskSpaceWarningThresholdError = $extensionConfig['diskSpaceWarningThresholdError'] ?? '';
-        $this->diskSpaceWarningThresholdWarning = $extensionConfig['diskSpaceWarningThresholdWarning'] ?? '';
+        if (
+            isset($extensionConfig['diskSpaceWarningCustomCheckEnabled'])
+            && $extensionConfig['diskSpaceWarningCustomCheckEnabled'] === true
+            && isset($extensionConfig['diskSpaceWarningThresholdError'])
+        ) {
+            $this->diskSpaceWarningThresholdError = $extensionConfig['diskSpaceWarningThresholdError'];
+            $this->diskSpaceWarningThresholdWarning = $extensionConfig['diskSpaceWarningThresholdWarning'];
+        } else {
+            $this->diskSpaceWarningThresholdError = self::DEFAULT_THRESHOLDS['diskSpaceWarningThresholdError'];
+            $this->diskSpaceWarningThresholdWarning = self::DEFAULT_THRESHOLDS['diskSpaceWarningThresholdWarning'];
+        }
 
-        $this->errorLogSizeWarningThresholdError = $extensionConfig['errorLogSizeWarningThresholdError'] ?? '';
-        $this->errorLogSizeWarningThresholdWarning = $extensionConfig['errorLogSizeWarningThresholdWarning'] ?? '';
+        if (
+            isset($extensionConfig['errorLogSizeWarningCustomCheckEnabled'])
+            && $extensionConfig['errorLogSizeWarningCustomCheckEnabled'] === true
+            && isset($extensionConfig['errorLogSizeWarningThresholdError'])
+        ) {
+            $this->errorLogSizeWarningThresholdError = $extensionConfig['errorLogSizeWarningThresholdError'];
+            $this->errorLogSizeWarningThresholdWarning = $extensionConfig['errorLogSizeWarningThresholdWarning'];
+        } else {
+            $this->errorLogSizeWarningThresholdError = self::DEFAULT_THRESHOLDS['errorLogSizeWarningThresholdError'];
+            $this->errorLogSizeWarningThresholdWarning = self::DEFAULT_THRESHOLDS['errorLogSizeWarningThresholdWarning'];
+        }
 
-        $this->varFolderSizeWarningThresholdError = $extensionConfig['varFolderSizeWarningThresholdError'] ?? '';
-        $this->varFolderSizeWarningThresholdWarning = $extensionConfig['varFolderSizeWarningThresholdWarning'] ?? '';
+        if (
+            isset($extensionConfig['varFolderSizeWarningCustomCheckEnabled'])
+            && $extensionConfig['varFolderSizeWarningCustomCheckEnabled'] === true
+            && isset($extensionConfig['varFolderSizeWarningThresholdError'])
+        ) {
+            $this->varFolderSizeWarningThresholdError = $extensionConfig['varFolderSizeWarningThresholdError'];
+            $this->varFolderSizeWarningThresholdWarning = $extensionConfig['varFolderSizeWarningThresholdWarning'];
+        } else {
+            $this->varFolderSizeWarningThresholdError = self::DEFAULT_THRESHOLDS['varFolderSizeWarningThresholdError'];
+            $this->varFolderSizeWarningThresholdWarning = self::DEFAULT_THRESHOLDS['varFolderSizeWarningThresholdWarning'];
+        }
 
-        $this->databaseSizeWarningThresholdError = $extensionConfig['databaseSizeWarningThresholdError'] ?? '';
-        $this->databaseSizeWarningThresholdWarning = $extensionConfig['databaseSizeWarningThresholdWarning'] ?? '';
+        if (
+            isset($extensionConfig['databaseSizeWarningCustomCheckEnabled'])
+            && $extensionConfig['databaseSizeWarningCustomCheckEnabled'] === true
+            && isset($extensionConfig['databaseSizeWarningThresholdError'])
+        ) {
+            $this->databaseSizeWarningThresholdError = $extensionConfig['databaseSizeWarningThresholdError'];
+            $this->databaseSizeWarningThresholdWarning = $extensionConfig['databaseSizeWarningThresholdWarning'];
+        } else {
+            $this->databaseSizeWarningThresholdError = self::DEFAULT_THRESHOLDS['databaseSizeWarningThresholdError'];
+            $this->databaseSizeWarningThresholdWarning = self::DEFAULT_THRESHOLDS['databaseSizeWarningThresholdWarning'];
+        }
 
-        $this->allowedFiles = array_map('trim', explode("\n", $extensionConfig['allowedFiles'] ?? ''));
+        if (
+            isset($extensionConfig['allowedFilesWarningCustomCheckEnabled'])
+            && $extensionConfig['allowedFilesWarningCustomCheckEnabled'] === true
+            && isset($extensionConfig['allowedFiles'])
+        ) {
+            $this->allowedFiles = array_map('trim', explode("\n", $extensionConfig['allowedFiles']));
+        } else {
+            $this->allowedFiles = self::DEFAULT_THRESHOLDS['allowedFiles'];
+        }
     }
 
     /**
