@@ -51,9 +51,11 @@ class HealthCheck extends ActionController
             $this->throwStatus(403, 'Forbidden');
         }
 
-        $cachedResult = $this->cache->get(self::CACHE_IDENTIFIER);
-        if ($cachedResult !== false) {
-            return $cachedResult;
+        if (isset($this->cache)) {
+            $cachedResult = $this->cache->get(self::CACHE_IDENTIFIER);
+            if ($cachedResult !== false) {
+                return $cachedResult;
+            }
         }
 
         $checkResults = new CheckResults(DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s')));
@@ -66,9 +68,11 @@ class HealthCheck extends ActionController
         $checkResults->addCheckResult($this->healthCheckService->getTYPO3DBLog());
         $checkResults->addCheckResult($this->healthCheckService->getTYPO3Version());
 
-        $result = $checkResults->toJson();
+        $result = $checkResults->toJson() ?? "";
 
-        $this->cache->set(self::CACHE_IDENTIFIER, $result, [], 3600);
+        if (isset($this->cache)) {
+            $this->cache->set(self::CACHE_IDENTIFIER, $result, [], 3600);
+        }
         return $result;
     }
 
