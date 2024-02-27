@@ -375,7 +375,7 @@ class OhDearHealthCheckService
             'index.php',
             'license.txt',
             'fileadmin',
-            'mailing',
+            'uploads',
             'typo3',
             'typo3conf',
             'typo3temp',
