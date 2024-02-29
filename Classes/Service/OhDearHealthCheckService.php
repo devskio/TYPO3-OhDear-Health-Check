@@ -396,16 +396,15 @@ class OhDearHealthCheckService
      */
     public function getMysqlCredentials(): ?array
     {
-        // Path to the TYPO3 LocalConfiguration.php file
-        $localConfigurationPath = GeneralUtility::getFileAbsFileName('typo3conf/LocalConfiguration.php');
-
-        // Read the TYPO3 LocalConfiguration.php file
-        $localConfiguration = include($localConfigurationPath);
-
-        // Get the MySQL credentials from the configuration
-        $credentials = $localConfiguration['DB']['Connections']['Default'] ?? null;
-
-        return $credentials;
+        return [
+            'charset' => getenv('TYPO3_DB_CONNECTIONS_DEFAULT_CHARSET') ?: 'utf8mb4',
+            'dbname' => getenv('TYPO3_DB_CONNECTIONS_DEFAULT_DBNAME') ?: '',
+            'driver' => getenv('TYPO3_DB_CONNECTIONS_DEFAULT_DRIVER') ?: 'mysqli',
+            'host' => getenv('TYPO3_DB_CONNECTIONS_DEFAULT_HOST') ?: 'localhost',
+            'password' => getenv('TYPO3_DB_CONNECTIONS_DEFAULT_PASSWORD') ?: '',
+            'port' => getenv('TYPO3_DB_CONNECTIONS_DEFAULT_PORT') ?: 3306,
+            'user' => getenv('TYPO3_DB_CONNECTIONS_DEFAULT_USER') ?: '',
+        ];
     }
 
     /**
