@@ -1,6 +1,6 @@
 <?php
 
-namespace Devskio\Typo3OhDearHealthCheck\ViewHelpers\CustomFields;
+namespace Devskio\Typo3OhDearHealthCheck\UserFunction\CustomFields;
 
 class Textarea
 {

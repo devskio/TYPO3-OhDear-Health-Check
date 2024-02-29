@@ -33,5 +33,5 @@ databaseSizeWarningThresholdWarning=50000000
 
 # cat=Allowed server files; type=boolean; label=Allowed Files Check
 allowedFilesWarningCustomCheckEnabled=1
-# cat=Allowed server files; type=user[Devskio\Typo3OhDearHealthCheck\ViewHelpers\CustomFields\Textarea->render]; label=Allowed Files
+# cat=Allowed server files; type=user[Devskio\Typo3OhDearHealthCheck\UserFunction\CustomFields\Textarea->render]; label=Allowed Files
 allowedFiles=
