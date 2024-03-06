@@ -69,10 +69,10 @@ class HealthcheckWidget implements WidgetInterface
         $this->backendUser = $backendUser;
 
         $this->view->setTemplateRootPaths(
-            [GeneralUtility::getFileAbsFileName('EXT:ds_boilerplate/Resources/Private/Templates')]
+            [GeneralUtility::getFileAbsFileName('EXT:typo3_ohdear_health_check/Resources/Private/Templates')]
         );
         $this->view->setPartialRootPaths(
-            [GeneralUtility::getFileAbsFileName('EXT:ds_boilerplate/Resources/Private/Partials')]
+            [GeneralUtility::getFileAbsFileName('EXT:typo3_ohdear_health_check/Resources/Private/Partials')]
         );
         $this->view->setTemplate('Widget/Healthcheck');
     }
