@@ -7,3 +7,18 @@ services:
 
   Devskio\Typo3OhDearHealthCheck\:
     resource: '../Classes/*'
+
+  Devskio\Typo3OhDearHealthCheck\Widgets\HealthcheckWidget:
+    arguments:
+      $view: '@dashboard.views.widget'
+      $requestFactory: '@TYPO3\CMS\Core\Http\RequestFactory'
+      $backendUser: '@TYPO3\CMS\Core\Authentication\BackendUserAuthentication'
+    tags:
+      - name: dashboard.widget
+        identifier: 'healthcheckWidget'
+        groupNames: 'general'
+        title: 'Healthcheck Widget'
+        description: 'This is a healthcheck widget.'
+        iconIdentifier: 'content-dashboard'
+        height: 'medium'
+        width: 'medium'
