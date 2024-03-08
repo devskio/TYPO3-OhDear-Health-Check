@@ -73,6 +73,10 @@ class HealthcheckWidget implements WidgetInterface
             $site = $this->ohDear->site($this->siteId);
         }
 
+        foreach ($site->checks as $check) {
+            $check->type = $this->formatCheckType($check->type);
+        }
+
         $this->view->assignMultiple([
             'configuration' => $this->configuration,
             'applicationHealthResults' => $applicationHealthChecks ?? null,
@@ -80,5 +84,16 @@ class HealthcheckWidget implements WidgetInterface
             'siteId' => $this->siteId
         ]);
         return $this->view->render();
+    }
+
+    /**
+     * Formats the check type to a more human-readable format.
+     *
+     * @param string $checkType
+     * @return string
+     */
+    private function formatCheckType(string $checkType): string
+    {
+        return str_replace('_', '-', $checkType);
     }
 }
