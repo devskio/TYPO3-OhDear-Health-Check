@@ -64,6 +64,9 @@ class HealthCheck extends ActionController
     ) {
         $this->cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('typo3_ohdear_health_check');
         $this->eventDispatcher = $eventDispatcher;
+
+        $config = $this->extensionConfiguration->get('typo3_ohdear_health_check');
+        $this->cachingTime = $config['cachingTime'] ?? $config['defaultCachingTime'];
     }
 
     /**
@@ -95,7 +98,7 @@ class HealthCheck extends ActionController
         $result = $checkResults->toJson() ?? "";
 
         if (isset($this->cache)) {
-            $this->cache->set(self::CACHE_IDENTIFIER, $result, [], 3600);
+            $this->cache->set(self::CACHE_IDENTIFIER, $result, [], $this->cachingTime);
         }
         return $result;
     }
