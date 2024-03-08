@@ -1,5 +1,9 @@
 # cat=General; type=string; label=Health Report Secret
 ohdearHealthCheckSecret=
+# cat=General; type=string; label=Oh Dear API Key
+ohDearApiKey=
+# cat=General; type=string; label=Oh Dear Site ID
+ohDearSiteId=
 # cat=General; type=number; label=Caching Time
 cachingTime=3600
 

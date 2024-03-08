@@ -12,7 +12,7 @@ services:
     arguments:
       $view: '@dashboard.views.widget'
       $requestFactory: '@TYPO3\CMS\Core\Http\RequestFactory'
-      $backendUser: '@TYPO3\CMS\Core\Authentication\BackendUserAuthentication'
+      $extensionConfiguration: '@TYPO3\CMS\Core\Configuration\ExtensionConfiguration'
     tags:
       - name: dashboard.widget
         identifier: 'healthcheckWidget'
