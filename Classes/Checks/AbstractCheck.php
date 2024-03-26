@@ -104,12 +104,12 @@ abstract class AbstractCheck
     /**
      * Function to determine the status of the check based on the value and thresholds.
      *
-     * @param float $value The value to check.
-     * @param float $errorThreshold The error threshold.
-     * @param float $warningThreshold The warning threshold.
+     * @param string $value The value to check.
+     * @param string $errorThreshold The error threshold.
+     * @param string $warningThreshold The warning threshold.
      * @return string The status of the check.
      */
-    protected function determineStatus(float $value, float $errorThreshold, float $warningThreshold): string
+    protected function determineStatus(string $value, string $errorThreshold, string $warningThreshold): string
     {
         if ($value > $errorThreshold) {
             return CheckResult::STATUS_FAILED;
