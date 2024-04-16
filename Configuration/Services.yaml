@@ -16,7 +16,7 @@ services:
     tags:
       - name: dashboard.widget
         identifier: 'healthcheckWidget'
-        groupNames: 'general'
+        groupNames: 'healthCheck'
         title: 'Healthcheck Widget'
         description: 'This is a healthcheck widget.'
         iconIdentifier: 'content-dashboard'
