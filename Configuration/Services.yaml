@@ -17,8 +17,8 @@ services:
       - name: dashboard.widget
         identifier: 'healthcheckWidget'
         groupNames: 'healthCheck'
-        title: 'Healthcheck Widget'
-        description: 'This is a healthcheck widget.'
+        title: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.title'
+        description: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.description'
         iconIdentifier: 'content-dashboard'
         height: 'medium'
         width: 'medium'
