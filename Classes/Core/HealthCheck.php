@@ -2,13 +2,6 @@
 namespace Devskio\Typo3OhDearHealthCheck\Core;
 
 use DateTime;
-use Devskio\Typo3OhDearHealthCheck\Checks\DiskUsedSpace;
-use Devskio\Typo3OhDearHealthCheck\Checks\ForgottenFiles;
-use Devskio\Typo3OhDearHealthCheck\Checks\MySqlSize;
-use Devskio\Typo3OhDearHealthCheck\Checks\PhpErrorLogSize;
-use Devskio\Typo3OhDearHealthCheck\Checks\Typo3DatabaseLog;
-use Devskio\Typo3OhDearHealthCheck\Checks\Typo3Version;
-use Devskio\Typo3OhDearHealthCheck\Checks\VarFolderSize;
 use OhDear\HealthCheckResults\CheckResults;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Cache\CacheManager;
@@ -31,15 +24,14 @@ class HealthCheck extends ActionController
      *
      * @var array
      */
-    private $checkClasses = [
-        DiskUsedSpace::class,
-        ForgottenFiles::class,
-        MySqlSize::class,
-        PhpErrorLogSize::class,
-        Typo3DatabaseLog::class,
-        Typo3Version::class,
-        VarFolderSize::class,
-    ];
+    private $checkClasses = [];
+
+    /**
+     * Array of check classes.
+     *
+     * @var string
+     */
+    private $checksClassesNamespace = 'Devskio\\Typo3OhDearHealthCheck\\Checks\\';
 
     /**
      * Cache identifier
@@ -67,6 +59,8 @@ class HealthCheck extends ActionController
 
         $config = $this->extensionConfiguration->get('typo3_ohdear_health_check');
         $this->cachingTime = $config['cachingTime'] ?? $config['defaultCachingTime'];
+
+        $this->addCheckClasses();
     }
 
     /**
@@ -115,5 +109,21 @@ class HealthCheck extends ActionController
         $ohdearSecretConfig = $extensionConfig['ohdearHealthCheckSecret'];
         $ohdearSecretHeader = $request->getHeader('oh-dear-health-check-secret')[0] ?? '';
         return !empty($ohdearSecretConfig) && $ohdearSecretConfig === $ohdearSecretHeader;
+    }
+
+    /**
+     * Add a check classes to the list
+     */
+    public function addCheckClasses(): void
+    {
+        $files = glob(__DIR__ . '/../Checks/*.php');
+        foreach ($files as $file) {
+            $class = pathinfo($file, PATHINFO_FILENAME);
+            if ($class === 'AbstractCheck') {
+                continue;
+            }
+            $class = $this->checksClassesNamespace . $class;
+            $this->checkClasses[] = $class;
+        }
     }
 }
