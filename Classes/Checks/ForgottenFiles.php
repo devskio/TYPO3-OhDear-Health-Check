@@ -3,9 +3,7 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class ForgottenFiles
@@ -15,21 +13,29 @@ class ForgottenFiles extends AbstractCheck
 {
 
     /**
-     * AbstractCheck constructor.
+     * The identifier of the check.
      *
-     * @param ExtensionConfiguration $extensionConfiguration
+     * @var string
      */
-    public function __construct(ExtensionConfiguration $extensionConfiguration)
+    const IDENTIFIER = 'forgottenFiles';
+
+    /**
+     * ForgottenFiles constructor.
+     *
+     * @param array $configuration
+     */
+    public function __construct(array $configuration)
     {
-        parent::__construct($extensionConfiguration);
+        parent::__construct($configuration);
         if (
-            isset($this->extensionConfiguration['allowedFilesWarningCustomCheckEnabled'])
-            && $this->extensionConfiguration['allowedFilesWarningCustomCheckEnabled']
-            && isset($this->extensionConfiguration['allowedFiles'])
+            isset($this->configuration['allowedFilesWarningCustomCheckEnabled'])
+            && $this->configuration['allowedFilesWarningCustomCheckEnabled']
+            && isset($this->configuration['allowedFiles'])
+            && !empty($this->configuration['allowedFiles'])
         ) {
-            $this->allowedFiles = array_map('trim', explode("\n", $this->extensionConfiguration['allowedFiles']));
+            $this->configuration['allowedFiles'] = array_map('trim', explode("\n", $this->configuration['allowedFiles']));
         } else {
-            $this->allowedFiles = self::DEFAULT_THRESHOLDS['allowedFiles'];
+            $this->configuration['allowedFiles'] = $this->getDefaultConfiguration()['allowedFiles'];
         }
     }
 
@@ -89,7 +95,7 @@ class ForgottenFiles extends AbstractCheck
      */
     private function isAllowedItem(string $item): bool
     {
-        $allowedFiles = array_merge($this->allowedFiles, [
+        $allowedFiles = array_merge($this->configuration['allowedFiles'], [
             '.htaccess',
             'index.php',
             'license.txt',
@@ -111,5 +117,18 @@ class ForgottenFiles extends AbstractCheck
         }
 
         return false;
+    }
+
+    /**
+     * Default configuration for this check.
+     *
+     * @return array
+     */
+    public function getDefaultConfiguration(): array
+    {
+        return [
+            'allowedFilesWarningCustomCheckEnabled' => true,
+            'allowedFiles' => []
+        ];
     }
 }

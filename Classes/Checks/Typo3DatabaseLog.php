@@ -3,12 +3,9 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class Typo3DatabaseLog
@@ -18,13 +15,20 @@ class Typo3DatabaseLog extends AbstractCheck
 {
 
     /**
-     * AbstractCheck constructor.
+     * The identifier of the check.
      *
-     * @param ExtensionConfiguration $extensionConfiguration
+     * @var string
      */
-    public function __construct(ExtensionConfiguration $extensionConfiguration)
+    const IDENTIFIER = 'typo3DatabaseLog';
+
+    /**
+     * Typo3DatabaseLog constructor.
+     *
+     * @param array $configuration
+     */
+    public function __construct(array $configuration)
     {
-        parent::__construct($extensionConfiguration);
+        parent::__construct($configuration);
     }
 
     /**

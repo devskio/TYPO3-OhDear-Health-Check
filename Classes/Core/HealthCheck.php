@@ -88,7 +88,7 @@ class HealthCheck extends ActionController
 
         $checkResults = new CheckResults(DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s')));
         foreach ($this->checkClasses as $checkClass) {
-            $checkInstance = GeneralUtility::makeInstance($checkClass, $this->extensionConfiguration);
+            $checkInstance = GeneralUtility::makeInstance($checkClass, $this->extensionConfiguration->get('typo3_ohdear_health_check')[$checkClass::IDENTIFIER] ?? []);
             $checkResults->addCheckResult($checkInstance->run());
         }
 

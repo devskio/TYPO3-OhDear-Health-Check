@@ -3,7 +3,6 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 
 /**
@@ -14,13 +13,20 @@ class VarFolderSize extends AbstractCheck
 {
 
     /**
-     * AbstractCheck constructor.
+     * The identifier of the check.
      *
-     * @param ExtensionConfiguration $extensionConfiguration
+     * @var string
      */
-    public function __construct(ExtensionConfiguration $extensionConfiguration)
+    const IDENTIFIER = 'varFolderSize';
+
+    /**
+     * VarFolderSize constructor.
+     *
+     * @param array $configuration
+     */
+    public function __construct(array $configuration)
     {
-        parent::__construct($extensionConfiguration);
+        parent::__construct($configuration);
     }
 
     /**
@@ -39,8 +45,8 @@ class VarFolderSize extends AbstractCheck
 
         $status = $this->determineStatus(
             $varFolderSize,
-            $this->varFolderSizeWarningThresholdError,
-            $this->varFolderSizeWarningThresholdWarning
+            $this->configuration['varFolderSizeWarningThresholdError'],
+            $this->configuration['varFolderSizeWarningThresholdWarning']
         );
 
         // Convert file size to MB
@@ -102,5 +108,19 @@ class VarFolderSize extends AbstractCheck
             'SKIPPED',
             []
         );
+    }
+
+    /**
+     * Default configuration for this check.
+     *
+     * @return array
+     */
+    public function getDefaultConfiguration(): array
+    {
+        return [
+            'varFolderSizeWarningCustomCheckEnabled' => true,
+            'varFolderSizeWarningThresholdError' => 500000000,
+            'varFolderSizeWarningThresholdWarning' => 50000000,
+        ];
     }
 }

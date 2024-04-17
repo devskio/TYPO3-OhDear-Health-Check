@@ -3,7 +3,6 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
  * Class AbstractCheck
@@ -12,44 +11,21 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 abstract class AbstractCheck
 {
 
-    const DEFAULT_THRESHOLDS = [
-        'diskSpaceWarningCustomCheckEnabled' => true,
-        'diskSpaceWarningThresholdError' => 90,
-        'diskSpaceWarningThresholdWarning' => 80,
-        'errorLogSizeWarningCustomCheckEnabled' => true,
-        'errorLogSizeWarningThresholdError' => 10000000,
-        'errorLogSizeWarningThresholdWarning' => 5000000,
-        'varFolderSizeWarningCustomCheckEnabled' => true,
-        'varFolderSizeWarningThresholdError' => 500000000,
-        'varFolderSizeWarningThresholdWarning' => 50000000,
-        'databaseSizeWarningCustomCheckEnabled' => true,
-        'databaseSizeWarningThresholdError' => 5000000000,
-        'databaseSizeWarningThresholdWarning' => 500000000,
-        'allowedFilesWarningCustomCheckEnabled' => true,
-        'allowedFiles' => [],
-    ];
-
-    /**
-     * @var ExtensionConfiguration
-     */
-    protected $extensionConfiguration;
-
     /**
      * AbstractCheck constructor.
      *
-     * @param ExtensionConfiguration $extensionConfiguration
+     * @param array $configuration
      */
-    public function __construct(ExtensionConfiguration $extensionConfiguration)
+    public function __construct(array $configuration)
     {
-        $this->extensionConfiguration = $extensionConfiguration->get('typo3_ohdear_health_check');
+        $defaultConfiguration = $this->getDefaultConfiguration();
 
-        foreach (self::DEFAULT_THRESHOLDS as $key => $default) {
-            if (isset($this->extensionConfiguration[$key]) && $this->extensionConfiguration[$key]) {
-                $this->$key = $this->extensionConfiguration[$key];
-            } else {
-                $this->$key = $default;
+        foreach ($defaultConfiguration as $key => $defaultValue) {
+            if (isset($configuration[$key]) && $configuration[$key] !== '') {
+                $defaultConfiguration[$key] = $configuration[$key];
             }
         }
+        $this->configuration = $defaultConfiguration;
     }
 
     /**
@@ -127,4 +103,13 @@ abstract class AbstractCheck
      */
     abstract public function run(): CheckResult;
 
+    /**
+     * Default configuration for this check.
+     *
+     * @return array
+     */
+    public function getDefaultConfiguration(): array
+    {
+        return [];
+    }
 }

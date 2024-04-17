@@ -8,34 +8,34 @@ ohDearSiteId=
 cachingTime=3600
 
 # cat=Disk space; type=boolean; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.enable_disk_space
-diskSpaceWarningCustomCheckEnabled=1
+diskUsedSpace.diskSpaceWarningCustomCheckEnabled=1
 # cat=Disk space; type=string; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.disk_space.error_threshold
-diskSpaceWarningThresholdError=90
+diskUsedSpace.diskSpaceWarningThresholdError=90
 # cat=Disk space; type=string; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.disk_space.warning_threshold
-diskSpaceWarningThresholdWarning=75
+diskUsedSpace.diskSpaceWarningThresholdWarning=75
 
 # cat=Logs; type=boolean; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.enable_error_log_size
-errorLogSizeWarningCustomCheckEnabled=1
+phpErrorLogSize.errorLogSizeWarningCustomCheckEnabled=1
 # cat=Logs; type=string; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.error_log_size.error
-errorLogSizeWarningThresholdError=500000000
+phpErrorLogSize.errorLogSizeWarningThresholdError=500000000
 # cat=Logs; type=string; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.error_log_size.warning
-errorLogSizeWarningThresholdWarning=50000000
+phpErrorLogSize.errorLogSizeWarningThresholdWarning=50000000
 
 # cat=Var folder; type=boolean; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.var_folder_size
-varFolderSizeWarningCustomCheckEnabled=1
+varFolderSize.varFolderSizeWarningCustomCheckEnabled=1
 # cat=Var folder; type=string; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.var_folder_size.error
-varFolderSizeWarningThresholdError=500000000
+varFolderSize.varFolderSizeWarningThresholdError=500000000
 # cat=Var folder; type=string; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.var_folder_size.warning
-varFolderSizeWarningThresholdWarning=50000000
+varFolderSize.varFolderSizeWarningThresholdWarning=50000000
 
 # cat=Database; type=boolean; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.database
-databaseSizeWarningCustomCheckEnabled=1
+mysqlSize.databaseSizeWarningCustomCheckEnabled=1
 # cat=Database; type=string; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.database.error
-databaseSizeWarningThresholdError=500000000
+mysqlSize.databaseSizeWarningThresholdError=500000000
 # cat=Database; type=string; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.database.warning
-databaseSizeWarningThresholdWarning=50000000
+mysqlSize.databaseSizeWarningThresholdWarning=50000000
 
 # cat=Allowed server files; type=boolean; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.allowed_files_check
-allowedFilesWarningCustomCheckEnabled=1
+forgottenFiles.allowedFilesWarningCustomCheckEnabled=1
 # cat=Allowed server files; type=user[Devskio\Typo3OhDearHealthCheck\UserFunction\CustomFields\Textarea->render]; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:ext_conf_template.labels.allowed_files
-allowedFiles=
+forgottenFiles.allowedFiles=

@@ -3,7 +3,6 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
  * Class DiskUsedSpace
@@ -13,13 +12,20 @@ class DiskUsedSpace extends AbstractCheck
 {
 
     /**
-     * AbstractCheck constructor.
+     * The identifier of the check.
      *
-     * @param ExtensionConfiguration $extensionConfiguration
+     * @var string
      */
-    public function __construct(ExtensionConfiguration $extensionConfiguration)
+    const IDENTIFIER = 'diskUsedSpace';
+
+    /**
+     * DiskUsedSpace constructor.
+     *
+     * @param array $configuration
+     */
+    public function __construct(array $configuration)
     {
-        parent::__construct($extensionConfiguration);
+        parent::__construct($configuration);
     }
 
     /**
@@ -68,8 +74,26 @@ class DiskUsedSpace extends AbstractCheck
         $usedSpaceInPercentage = round($percentage, 2); // Round to 2 decimal places
 
         // Set the status
-        $status = $this->determineStatus(intval($usedSpaceInPercentage), $this->diskSpaceWarningThresholdError, $this->diskSpaceWarningThresholdWarning);
+        $status = $this->determineStatus(
+            intval($usedSpaceInPercentage),
+            $this->configuration['diskSpaceWarningThresholdError'],
+            $this->configuration['diskSpaceWarningThresholdWarning']
+        );
 
         return [$usedSpaceInPercentage, $status];
+    }
+
+    /**
+     * Default configuration for this check.
+     *
+     * @return array
+     */
+    public function getDefaultConfiguration(): array
+    {
+        return [
+            'diskSpaceWarningCustomCheckEnabled' => true,
+            'diskSpaceWarningThresholdError' => 90,
+            'diskSpaceWarningThresholdWarning' => 80,
+        ];
     }
 }

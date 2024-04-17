@@ -3,8 +3,6 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Core\Environment;
 
 /**
  * Class Typo3Version
@@ -14,18 +12,25 @@ class Typo3Version extends AbstractCheck
 {
 
     /**
+     * The identifier of the check.
+     *
+     * @var string
+     */
+    const IDENTIFIER = 'typo3Version';
+
+    /**
      * Typo3 version url
      */
     const TYPO3_VERSION_URL = 'https://get.typo3.org/json';
 
     /**
-     * AbstractCheck constructor.
+     * Typo3Version constructor.
      *
-     * @param ExtensionConfiguration $extensionConfiguration
+     * @param array $configuration
      */
-    public function __construct(ExtensionConfiguration $extensionConfiguration)
+    public function __construct(array $configuration)
     {
-        parent::__construct($extensionConfiguration);
+        parent::__construct($configuration);
     }
 
     /**

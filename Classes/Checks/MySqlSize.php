@@ -3,8 +3,6 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -17,13 +15,20 @@ class MySqlSize extends AbstractCheck
 {
 
     /**
-     * AbstractCheck constructor.
+     * The identifier of the check.
      *
-     * @param ExtensionConfiguration $extensionConfiguration
+     * @var string
      */
-    public function __construct(ExtensionConfiguration $extensionConfiguration)
+    const IDENTIFIER = 'mysqlSize';
+
+    /**
+     * MySqlSize constructor.
+     *
+     * @param array $configuration
+     */
+    public function __construct(array $configuration)
     {
-        parent::__construct($extensionConfiguration);
+        parent::__construct($configuration);
     }
 
     /**
@@ -42,8 +47,8 @@ class MySqlSize extends AbstractCheck
 
                 $status = $this->determineStatus(
                     $sizeInBytes,
-                    $this->databaseSizeWarningThresholdError,
-                    $this->databaseSizeWarningThresholdWarning
+                    $this->configuration['databaseSizeWarningThresholdError'],
+                    $this->configuration['databaseSizeWarningThresholdWarning']
                 );
 
                 $biggestTables = $this->getBiggestTables($databaseName, $databaseConfig['dbname']);
@@ -149,5 +154,19 @@ class MySqlSize extends AbstractCheck
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
         $databaseConnection = $connectionPool->getConnectionByName($databaseName);
         return $databaseConnection->createQueryBuilder();
+    }
+
+    /**
+     * Default configuration for this check.
+     *
+     * @return array
+     */
+    public function getDefaultConfiguration(): array
+    {
+        return [
+            'databaseSizeWarningCustomCheckEnabled' => true,
+            'databaseSizeWarningThresholdError' => 5000000000,
+            'databaseSizeWarningThresholdWarning' => 500000000,
+        ];
     }
 }

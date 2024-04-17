@@ -3,7 +3,6 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
  * Class PhpErrorLogSize
@@ -13,13 +12,20 @@ class PhpErrorLogSize extends AbstractCheck
 {
 
     /**
-     * AbstractCheck constructor.
+     * The identifier of the check.
      *
-     * @param ExtensionConfiguration $extensionConfiguration
+     * @var string
      */
-    public function __construct(ExtensionConfiguration $extensionConfiguration)
+    const IDENTIFIER = 'phpErrorLogSize';
+
+    /**
+     * PhpErrorLogSize constructor.
+     *
+     * @param array $configuration
+     */
+    public function __construct(array $configuration)
     {
-        parent::__construct($extensionConfiguration);
+        parent::__construct($configuration);
     }
 
     /**
@@ -38,8 +44,8 @@ class PhpErrorLogSize extends AbstractCheck
 
         $status = $this->determineStatus(
             $errorLogFilesizeReadable,
-            $this->errorLogSizeWarningThresholdError,
-            $this->errorLogSizeWarningThresholdWarning
+            $this->configuration['errorLogSizeWarningThresholdError'],
+            $this->configuration['errorLogSizeWarningThresholdWarning']
         );
 
         return $this->createHealthCheckResult(
@@ -71,5 +77,19 @@ class PhpErrorLogSize extends AbstractCheck
             );
         }
         return $errorLogPath;
+    }
+
+    /**
+     * Default configuration for this check.
+     *
+     * @return array
+     */
+    public function getDefaultConfiguration(): array
+    {
+        return [
+            'errorLogSizeWarningCustomCheckEnabled' => true,
+            'errorLogSizeWarningThresholdError' => 10000000,
+            'errorLogSizeWarningThresholdWarning' => 5000000,
+        ];
     }
 }
