@@ -3,6 +3,7 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class DiskUsedSpace
@@ -10,24 +11,6 @@ use OhDear\HealthCheckResults\CheckResult;
  */
 class DiskUsedSpace extends AbstractCheck
 {
-
-    /**
-     * The identifier of the check.
-     *
-     * @var string
-     */
-    const IDENTIFIER = 'diskUsedSpace';
-
-    /**
-     * DiskUsedSpace constructor.
-     *
-     * @param array $configuration
-     */
-    public function __construct(array $configuration)
-    {
-        parent::__construct($configuration);
-    }
-
     /**
      * Run the health check.
      *
@@ -35,40 +18,40 @@ class DiskUsedSpace extends AbstractCheck
      */
     public function run(): CheckResult
     {
-        list($usedSpaceInPercentage, $status) = $this->calculateDiskUsage();
+        $diskUsage = $this->getEmptyResult();
+        if ($this->configuration['diskSpaceWarningCustomCheckEnabled']) {
+            $diskUsage = $this->calculateDiskUsage();
+        }
 
-        return $this->createHealthCheckResult(
-            'UsedDiskSpace',
-            'Used Disk Space',
-            $status,
-            sprintf('Disk usage: %s (%.2f%% used)', $status, $usedSpaceInPercentage),
-            sprintf('%.2f%%', $usedSpaceInPercentage),
-            ['disk_space_used_percentage' => $usedSpaceInPercentage]
+        $identifier = self::getIdentifier();
+        return new CheckResult(
+            $identifier,
+            LocalizationUtility::translate("check.{$identifier}.label", 'typo3_ohdear_health_check'),
+            LocalizationUtility::translate("check.{$identifier}.notificationMessage", 'typo3_ohdear_health_check', [$diskUsage['disk_space_used_percentage']]),
+            LocalizationUtility::translate("check.{$identifier}.shortSummary", 'typo3_ohdear_health_check', [$diskUsage['disk_space_used_percentage']]),
+            $diskUsage['status'],
+            [
+                'disk_space_used_percentage' => $diskUsage['disk_space_used_percentage'] . '%',
+                'total_space' => $diskUsage['total_space'],
+                'used_space' => $diskUsage['used_space'],
+            ]
         );
     }
 
     /**
      * Calculate the used disk space and determine the status.
      *
-     * @return array|CheckResult An array with the used space in percentage and the status, or a CheckResult instance if total space is zero.
+     * @return array An array with the used space in percentage, the status, the total space and the used space.
      */
     private function calculateDiskUsage(): CheckResult|array
     {
         $totalSpace = @disk_total_space('/');
-        $usedSpace = $totalSpace - @disk_free_space('/');
 
-        // Handle the case when total space is zero
-        if ($totalSpace == 0) {
-            return $this->createHealthCheckResult(
-                'UsedDiskSpace',
-                'Used disk space',
-                CheckResult::STATUS_SKIPPED,
-                0,
-                'SKIPPED',
-                ['disk_space_used_percentage' => '0%']
-            );
+        if (!$totalSpace) {
+            return $this->getEmptyResult(CheckResult::STATUS_CRASHED);
         }
 
+        $usedSpace = ($totalSpace - @disk_free_space('/')) ?? 0;
         // Calculate the percentage with 2 decimal points
         $percentage = ($usedSpace / $totalSpace) * 100;
         $usedSpaceInPercentage = round($percentage, 2); // Round to 2 decimal places
@@ -76,11 +59,16 @@ class DiskUsedSpace extends AbstractCheck
         // Set the status
         $status = $this->determineStatus(
             intval($usedSpaceInPercentage),
-            $this->configuration['diskSpaceWarningThresholdError'],
-            $this->configuration['diskSpaceWarningThresholdWarning']
+            intval($this->configuration['diskSpaceWarningThresholdError']),
+            intval($this->configuration['diskSpaceWarningThresholdWarning'])
         );
 
-        return [$usedSpaceInPercentage, $status];
+        return [
+            'disk_space_used_percentage' => $usedSpaceInPercentage,
+            'status' => $status,
+            'total_space' => $this->formatBytes($totalSpace),
+            'used_space' => $this->formatBytes($usedSpace),
+        ];
     }
 
     /**
@@ -94,6 +82,22 @@ class DiskUsedSpace extends AbstractCheck
             'diskSpaceWarningCustomCheckEnabled' => true,
             'diskSpaceWarningThresholdError' => 90,
             'diskSpaceWarningThresholdWarning' => 80,
+        ];
+    }
+
+    /**
+     * Get empty result.
+     * @param string $status
+     *
+     * @return array
+     */
+    protected function getEmptyResult(string $status = CheckResult::STATUS_SKIPPED): array
+    {
+        return [
+            'disk_space_used_percentage' => 0,
+            'status' => $status ?? CheckResult::STATUS_SKIPPED,
+            'total_space' => 'N/A',
+            'used_space' => 'N/A'
         ];
     }
 }

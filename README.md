@@ -21,7 +21,8 @@ The TYPO3 OhDear Health Check Extension allows you to monitor the health and per
 
 1. Run the following command to require the OhDear Health Check Extension via Composer: `composer require devskio/typo3_ohdear_health_check`
 2. Include the static TypoScript of the extension. `EXT:typo3_ohdear_health_check/Configuration/TypoScript/setup.typoscript`
-3. In sites configuration yaml file, add routeEnhancers for OhDear Health Check Extension:
+3. Once installed, go to the extension configuration settings and provide your Oh Dear API credentials together with Health Report Secret. Optionally, you can enable or disable the monitoring of specific checks together with setting the alert thresholds.
+4. [Optional] If you want to have nice Health Report URL, you can add a routeEnhancer for OhDear Health Check Extension in your site configuration yaml file.
 ```
 ...
 routeEnhancers:
@@ -30,14 +31,14 @@ routeEnhancers:
       healthcheck: 1689678601
 ...
 ```
-4. Once installed, go to the extension configuration settings and provide your Oh Dear API credentials.
 
 ## Usage
 
 1. After installing and configuring the extension, you can access the OhDear Health Check dashboard.
-2. The dashboard displays the current status of various monitored aspects, such as disk space, PHP Error Log Size, TYPO3 Error Log Size, MySQL Database Size, Forgotten Files on the Server, TYPO3 Database Log, TYPO3 Version.
-3. Configure the desired alert thresholds and notification settings in OhDear.
-4. When an issue is detected, you will receive alerts through your preferred communication channels (e.g., email, Slack, SMS) based on your Oh Dear configuration.
+2. In Application Health you have to set the URL of the health check endpoint. The URL is `https://yourdomain.com/?type=1689678601`. In case you have added the routeEnhancer, you can use `https://yourdomain.com/healthcheck`.
+3. The dashboard displays the current status of various monitored aspects, such as disk space, PHP Error Log Size, TYPO3 Error Log Size, MySQL Database Size, Forgotten Files on the Server, TYPO3 Database Log, TYPO3 Version.
+4. Configure the desired alert thresholds and notification settings in OhDear.
+5. When an issue is detected, you will receive alerts through your preferred communication channels (e.g., email, Slack, SMS) based on your Oh Dear configuration.
 
 ## Contributing
 

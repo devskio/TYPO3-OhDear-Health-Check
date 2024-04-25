@@ -6,6 +6,7 @@ use OhDear\HealthCheckResults\CheckResult;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class Typo3DatabaseLog
@@ -13,24 +14,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Typo3DatabaseLog extends AbstractCheck
 {
-
-    /**
-     * The identifier of the check.
-     *
-     * @var string
-     */
-    const IDENTIFIER = 'typo3DatabaseLog';
-
-    /**
-     * Typo3DatabaseLog constructor.
-     *
-     * @param array $configuration
-     */
-    public function __construct(array $configuration)
-    {
-        parent::__construct($configuration);
-    }
-
     /**
      * Run the health check.
      *
@@ -39,52 +22,42 @@ class Typo3DatabaseLog extends AbstractCheck
     public function run(): CheckResult
     {
         $credentials = $this->getMysqlCredentials();
+        $identifier = self::getIdentifier();
+        $numRecords = 0;
+        $status = CheckResult::STATUS_SKIPPED;
 
         if ($credentials !== null) {
             try {
-                $queryBuilder = $this->createQueryBuilder();
-                $numRecords = $this->getNumRecords($queryBuilder);
+                $numRecords = $this->getNumRecords();
 
+                $message = LocalizationUtility::translate("check.{$identifier}.notificationMessage", 'typo3_ohdear_health_check', [$numRecords]);
                 $status = ($numRecords > 500) ? CheckResult::STATUS_FAILED : CheckResult::STATUS_OK;
-
-                return $this->createHealthCheckResult(
-                    'TYPO3DBLog',
-                    'TYPO3 Database Error Log',
-                    $status,
-                    sprintf('Found %d error log records in the last month', $numRecords),
-                    $status,
-                    ['num_records' => $numRecords]
-                );
             } catch (\Exception $e) {
-                return $this->createHealthCheckResult(
-                    'TYPO3DBLog',
-                    'TYPO3 Database Error Log',
-                    CheckResult::STATUS_CRASHED,
-                    sprintf('Error executing the database query: %s', $e->getMessage()),
-                    'CRASHED',
-                    []
-                );
+                $message = LocalizationUtility::translate("check.{$identifier}.notificationMessage.error", 'typo3_ohdear_health_check', [$e->getMessage()]);
+                $status = CheckResult::STATUS_CRASHED;
             }
         } else {
-            return $this->createHealthCheckResult(
-                'TYPO3DBLog',
-                'TYPO3 Database Error Log',
-                CheckResult::STATUS_SKIPPED,
-                'MySQL credentials not available',
-                'SKIPPED',
-                []
-            );
+            $message = LocalizationUtility::translate("check.{$identifier}.notificationMessage.no_credentials", 'typo3_ohdear_health_check');
         }
+
+        return new CheckResult(
+            $identifier,
+            LocalizationUtility::translate("check.{$identifier}.label", 'typo3_ohdear_health_check'),
+            $message,
+            LocalizationUtility::translate("check.{$identifier}.shortSummary", 'typo3_ohdear_health_check', [$status]),
+            $status,
+            ['num_records' => $numRecords]
+        );
     }
 
     /**
      * Get the number of error log records in the last month.
      *
-     * @param QueryBuilder $queryBuilder The QueryBuilder instance.
      * @return int The number of records.
      */
-    private function getNumRecords(QueryBuilder $queryBuilder): int
+    private function getNumRecords(): int
     {
+        $queryBuilder = $this->createQueryBuilder();
         $oneMonthAgo = strtotime('-1 month');
         $query = $queryBuilder
             ->selectLiteral('COUNT(*) AS num_records')
@@ -126,6 +99,20 @@ class Typo3DatabaseLog extends AbstractCheck
         $databaseConnection = $connectionPool->getConnectionByName('Default');
 
         return $databaseConnection->createQueryBuilder();
+    }
+
+    /**
+     * Default configuration for this check.
+     *
+     * @return array
+     */
+    public function getDefaultConfiguration(): array
+    {
+        return [
+            'errorLogSizeWarningCustomCheckEnabled' => true,
+            'errorLogSizeWarningThresholdError' => 10000000,
+            'errorLogSizeWarningThresholdWarning' => 5000000,
+        ];
     }
 
 }

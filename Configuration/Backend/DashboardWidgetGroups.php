@@ -2,6 +2,6 @@
 
 return [
     'healthCheck' => [
-        'title' => 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.tabs.healthcheck',
+        'title' => 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.tabs.healthcheck',
     ],
 ];

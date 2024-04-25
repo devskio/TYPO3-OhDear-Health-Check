@@ -81,10 +81,10 @@ class HealthcheckWidget implements WidgetInterface
                 $this->view->assignMultiple([
                     'error' => [
                         'label' => LocalizationUtility::translate(
-                            'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:connection.error'
+                            'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:connection.error'
                         ),
                         'instructions' => LocalizationUtility::translate(
-                            'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:connection.error.instructions'
+                            'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:connection.error.instructions'
                         ),
                         'message' => $e->getMessage()
                     ]

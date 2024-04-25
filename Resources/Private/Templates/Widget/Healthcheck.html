@@ -17,7 +17,7 @@
 
       <f:if condition="{basicChecks} && {applicationHealthResults}">
         <h1>
-          {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:summary_status')}
+          {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:summary_status')}
           <div class="spinner-grow text-{summaryStatus}" role="status"></div>
         </h1>
       </f:if>
@@ -27,18 +27,18 @@
           <div class="col-md-6">
             <h2>{basicCheckResult.label}</h2>
             <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.checks.labels.status')} {basicCheckResult.summary}
+              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.status')} {basicCheckResult.summary}
             </p>
             <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.checks.labels.summary')} {basicCheckResult.attributes.latest_run_result}
+              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.summary')} {basicCheckResult.attributes.latest_run_result}
             </p>
             <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.checks.labels.last_updated')} {basicCheckResult.attributes.latest_run_ended_at}
+              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.last_updated')} {basicCheckResult.attributes.latest_run_ended_at}
             </p>
 
             <h4>
               <a href="https://ohdear.app/sites/{siteId}/check/{basicCheckResult.type}/report" target="_blank">
-                {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.checks.labels.view_report')}
+                {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.view_report')}
               </a>
             </h4>
           </div>
@@ -50,18 +50,18 @@
           <div class="col-md-6">
             <h2>{checkResult.label}</h2>
             <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.checks.labels.status')} {checkResult.status}
+              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.status')} {checkResult.status}
             </p>
             <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.checks.labels.summary')} {checkResult.message}
+              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.summary')} {checkResult.message}
             </p>
             <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.checks.labels.last_updated')} {checkResult.attributes.updated_at}
+              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.last_updated')} {checkResult.attributes.updated_at}
             </p>
 
             <h4>
               <a href="https://ohdear.app/sites/{siteId}/check/application-health/{checkResult.id}" target="_blank">
-                {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Languages/locallang_backend.xlf:widget.checks.labels.view_report')}
+                {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.view_report')}
               </a>
             </h4>
           </div>

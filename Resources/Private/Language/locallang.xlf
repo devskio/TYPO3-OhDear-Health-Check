@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2024-04-25T20:47:12Z" product-name="typo3_ohdear_health_check">
+    <header/>
+    <body>
+      <!-- Checks -->
+      <!-- Disk used space -->
+      <trans-unit id="check.diskUsedSpace.label">
+        <source>Disk used space</source>
+      </trans-unit>
+      <trans-unit id="check.diskUsedSpace.notificationMessage">
+        <source>Disk usage: %.2f%% used</source>
+      </trans-unit>
+      <trans-unit id="check.diskUsedSpace.shortSummary">
+        <source>%.2f%%</source>
+      </trans-unit>
+
+      <!-- Forgotten Files -->
+      <trans-unit id="check.forgottenFiles.label">
+        <source>Forgotten Files</source>
+      </trans-unit>
+      <trans-unit id="check.forgottenFiles.notificationMessage">
+        <source>Found %d unallowed files or folders</source>
+      </trans-unit>
+      <trans-unit id="check.forgottenFiles.shortSummary">
+        <source>%d unallowed files</source>
+      </trans-unit>
+
+      <!-- MySql Size -->
+      <trans-unit id="check.mySqlSize.label">
+        <source>Mysql Size (%s)</source>
+      </trans-unit>
+      <trans-unit id="check.mySqlSize.notificationMessage">
+        <source>Database size: %s</source>
+      </trans-unit>
+      <trans-unit id="check.mySqlSize.shortSummary">
+        <source>%s</source>
+      </trans-unit>
+
+      <!-- PhpErrorLogSize -->
+      <trans-unit id="check.phpErrorLogSize.label">
+        <source>PHP Error Log Size</source>
+      </trans-unit>
+      <trans-unit id="check.phpErrorLogSize.notificationMessage">
+        <source>Error Log Filesize: %s</source>
+      </trans-unit>
+      <trans-unit id="check.phpErrorLogSize.shortSummary">
+        <source>%s</source>
+      </trans-unit>
+
+      <!-- Typo3DatabaseLog -->
+      <trans-unit id="check.typo3DatabaseLog.label">
+        <source>TYPO3 Database Error Log</source>
+      </trans-unit>
+      <trans-unit id="check.typo3DatabaseLog.notificationMessage">
+        <source>Found %d error log records in the last month</source>
+      </trans-unit>
+      <trans-unit id="check.typo3DatabaseLog.notificationMessage.no_credentials">
+        <source>MySQL credentials not available</source>
+      </trans-unit>
+      <trans-unit id="check.typo3DatabaseLog.notificationMessage.error">
+        <source>Error executing the database query: %s</source>
+      </trans-unit>
+      <trans-unit id="check.typo3DatabaseLog.shortSummary">
+        <source>%s</source>
+      </trans-unit>
+
+      <!-- Typo3Version -->
+      <trans-unit id="check.typo3Version.label">
+        <source>TYPO3 Version</source>
+      </trans-unit>
+      <trans-unit id="check.typo3Version.notificationMessage">
+        <source>Update available: Installed TYPO3 version is %s, Latest version is %s</source>
+      </trans-unit>
+      <trans-unit id="check.typo3Version.notificationMessage.ok">
+        <source>Installed TYPO3 version %s is up to date</source>
+      </trans-unit>
+      <trans-unit id="check.typo3Version.notificationMessage.not_found">
+        <source>Cannot find composer.lock file</source>
+      </trans-unit>
+      <trans-unit id="check.typo3Version.notificationMessage.error_parsing">
+        <source>Error parsing composer.lock file</source>
+      </trans-unit>
+      <trans-unit id="check.typo3Version.notificationMessage.error_fetching">
+        <source>Error fetching TYPO3 version data from server</source>
+      </trans-unit>
+      <trans-unit id="check.typo3Version.shortSummary">
+        <source>%s</source>
+      </trans-unit>
+
+      <!-- VarFolderSize -->
+      <trans-unit id="check.varFolderSize.label">
+        <source>TYPO3 Var Folder Size</source>
+      </trans-unit>
+      <trans-unit id="check.varFolderSize.notificationMessage">
+        <source>TYPO3 Var Folder Size: %s</source>
+      </trans-unit>
+      <trans-unit id="check.varFolderSize.shortSummary">
+        <source>TYPO3 Var Folder Size: %s</source>
+      </trans-unit>
+
+
+
+
+    </body>
+  </file>
+</xliff>

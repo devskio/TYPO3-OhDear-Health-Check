@@ -4,6 +4,7 @@ namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class VarFolderSize
@@ -11,24 +12,6 @@ use TYPO3\CMS\Core\Core\Environment;
  */
 class VarFolderSize extends AbstractCheck
 {
-
-    /**
-     * The identifier of the check.
-     *
-     * @var string
-     */
-    const IDENTIFIER = 'varFolderSize';
-
-    /**
-     * VarFolderSize constructor.
-     *
-     * @param array $configuration
-     */
-    public function __construct(array $configuration)
-    {
-        parent::__construct($configuration);
-    }
-
     /**
      * Run the health check.
      *
@@ -36,29 +19,32 @@ class VarFolderSize extends AbstractCheck
      */
     public function run(): CheckResult
     {
-        $varFolderPath = Environment::getVarPath();
-        $varFolderSize = $this->getFolderSize($varFolderPath);
+        $identifier = self::getIdentifier();
+        $status = CheckResult::STATUS_SKIPPED;
+        $varFolderSize = 0;
 
-        if ($varFolderSize === false) {
-            return $this->createSkippedResult();
+        if ($this->configuration['varFolderSizeWarningCustomCheckEnabled']) {
+            $varFolderPath = Environment::getVarPath();
+            $varFolderSize = $this->getFolderSize($varFolderPath);
+
+            if ($varFolderSize) {
+                $status = $this->determineStatus(
+                    $varFolderSize,
+                    $this->configuration['varFolderSizeWarningThresholdError'],
+                    $this->configuration['varFolderSizeWarningThresholdWarning']
+                );
+            } else {
+                $status = CheckResult::STATUS_CRASHED;
+            }
         }
 
-        $status = $this->determineStatus(
-            $varFolderSize,
-            $this->configuration['varFolderSizeWarningThresholdError'],
-            $this->configuration['varFolderSizeWarningThresholdWarning']
-        );
-
-        // Convert file size to MB
-        $varFolderSizeInMB = round($varFolderSize / (1024 * 1024), 2);
-
-        return $this->createHealthCheckResult(
-            'TYPO3VarFolderSize',
-            'TYPO3 Var Folder Size',
+        return new CheckResult(
+            $identifier,
+            LocalizationUtility::translate("check.{$identifier}.label", 'typo3_ohdear_health_check'),
+            LocalizationUtility::translate("check.{$identifier}.notificationMessage", 'typo3_ohdear_health_check', [$this->formatBytes($varFolderSize)]),
+            LocalizationUtility::translate("check.{$identifier}.shortSummary", 'typo3_ohdear_health_check', [$this->formatBytes($varFolderSize)]),
             $status,
-            sprintf('TYPO3VarFolderSize: %s (%sMB)', $status, $varFolderSizeInMB),
-            sprintf('TYPO3 Var Folder Size: %s (%sMB)', $status, $varFolderSizeInMB),
-            ['var_folder_size' => $varFolderSizeInMB]
+            ['var_folder_size' => $this->formatBytes($varFolderSize)]
         );
     }
 
@@ -91,23 +77,6 @@ class VarFolderSize extends AbstractCheck
 
         closedir($handle);
         return $totalSize;
-    }
-
-    /**
-     * Create a CheckResult with the status set to SKIPPED.
-     *
-     * @return CheckResult The created CheckResult.
-     */
-    private function createSkippedResult(): CheckResult
-    {
-        return $this->createHealthCheckResult(
-            'TYPO3VarFolderSize',
-            'TYPO3 Var Folder Size',
-            CheckResult::STATUS_SKIPPED,
-            'Var Folder Not Found',
-            'SKIPPED',
-            []
-        );
     }
 
     /**

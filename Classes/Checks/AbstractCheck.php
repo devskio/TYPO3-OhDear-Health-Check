@@ -29,36 +29,6 @@ abstract class AbstractCheck
     }
 
     /**
-     * Helper function to create the health check result in the required format.
-     *
-     * @param string $name
-     * @param string $label
-     * @param string $status
-     * @param string $notificationMessage
-     * @param mixed $shortSummary
-     * @param array $meta
-     * @return CheckResult
-     */
-    protected function createHealthCheckResult(
-        string $name,
-        string $label,
-        string $status,
-        string $notificationMessage,
-        mixed $shortSummary,
-        array $meta
-    ): CheckResult
-    {
-        return new CheckResult(
-            name: $name,
-            label: $label,
-            notificationMessage: $notificationMessage,
-            shortSummary: $shortSummary,
-            status: $status,
-            meta: $meta
-        );
-    }
-
-    /**
      * Function to format bytes to a human-readable format in MB.
      *
      * @param float $bytes The size in bytes.
@@ -80,12 +50,12 @@ abstract class AbstractCheck
     /**
      * Function to determine the status of the check based on the value and thresholds.
      *
-     * @param string $value The value to check.
-     * @param string $errorThreshold The error threshold.
-     * @param string $warningThreshold The warning threshold.
+     * @param int $value The value to check.
+     * @param int $errorThreshold The error threshold.
+     * @param int $warningThreshold The warning threshold.
      * @return string The status of the check.
      */
-    protected function determineStatus(string $value, string $errorThreshold, string $warningThreshold): string
+    protected function determineStatus(int $value, int $errorThreshold, int $warningThreshold): string
     {
         if ($value > $errorThreshold) {
             return CheckResult::STATUS_FAILED;
@@ -111,5 +81,13 @@ abstract class AbstractCheck
     public function getDefaultConfiguration(): array
     {
         return [];
+    }
+
+    /**
+     * @return string
+     */
+    public static function getIdentifier(): string
+    {
+        return lcfirst((new \ReflectionClass(get_called_class()))->getShortName());
     }
 }

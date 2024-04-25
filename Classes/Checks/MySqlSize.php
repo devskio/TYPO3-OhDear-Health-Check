@@ -6,6 +6,7 @@ use OhDear\HealthCheckResults\CheckResult;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class MySqlSize
@@ -13,24 +14,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class MySqlSize extends AbstractCheck
 {
-
-    /**
-     * The identifier of the check.
-     *
-     * @var string
-     */
-    const IDENTIFIER = 'mysqlSize';
-
-    /**
-     * MySqlSize constructor.
-     *
-     * @param array $configuration
-     */
-    public function __construct(array $configuration)
-    {
-        parent::__construct($configuration);
-    }
-
     /**
      * Run the health check.
      *
@@ -39,39 +22,44 @@ class MySqlSize extends AbstractCheck
     public function run(): CheckResult
     {
         $databaseConfigurations = $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections'];
+        $identifier = self::getIdentifier();
 
-        foreach ($databaseConfigurations as $databaseName => $databaseConfig) {
-            try {
-                $sizeInBytes = $this->getDatabaseSize($databaseName, $databaseConfig['dbname']);
-                $sizeInMB = round($sizeInBytes / (1024 * 1024), 2);
+        if ($this->configuration['databaseSizeWarningCustomCheckEnabled']) {
+            foreach ($databaseConfigurations as $databaseConfiguration => $databaseConfig) {
+                $biggestTables = [];
+                $sizeInBytes = 0;
 
-                $status = $this->determineStatus(
-                    $sizeInBytes,
-                    $this->configuration['databaseSizeWarningThresholdError'],
-                    $this->configuration['databaseSizeWarningThresholdWarning']
-                );
+                try {
+                    $sizeInBytes = $this->getDatabaseSize($databaseConfiguration, $databaseConfig['dbname']);
 
-                $biggestTables = $this->getBiggestTables($databaseName, $databaseConfig['dbname']);
+                    $status = $this->determineStatus(
+                        $sizeInBytes,
+                        $this->configuration['databaseSizeWarningThresholdError'],
+                        $this->configuration['databaseSizeWarningThresholdWarning']
+                    );
 
-                return $this->createHealthCheckResult(
-                    'MysqlSize' . $databaseName,
-                    'Mysql Size (' . $databaseConfig['dbname'] . ')',
-                    $status,
-                    sprintf('Database size: %s MB', $sizeInMB),
-                    sprintf('%s MB', $sizeInMB),
-                    ["biggest_tables" => $biggestTables]
-                );
-            } catch (\Exception $e) {
-                $status = CheckResult::STATUS_SKIPPED;
+                    $biggestTables = $this->getBiggestTables($databaseConfiguration, $databaseConfig['dbname']);
+                } catch (\Exception $e) {
+                    $status = CheckResult::STATUS_CRASHED;
+                } finally {
+                    return new CheckResult(
+                        $identifier . $databaseConfiguration,
+                        LocalizationUtility::translate("check.{$identifier}.label", 'typo3_ohdear_health_check', [$databaseConfig['dbname']]),
+                        LocalizationUtility::translate("check.{$identifier}.notificationMessage", 'typo3_ohdear_health_check', [$this->formatBytes($sizeInBytes)]),
+                        LocalizationUtility::translate("check.{$identifier}.shortSummary", 'typo3_ohdear_health_check', [$this->formatBytes($sizeInBytes)]),
+                        $status,
+                        ["biggest_tables" => $biggestTables]
+                    );
+                }
             }
         }
 
-        return $this->createHealthCheckResult(
-            'MysqlSize' . $databaseName,
-            'Mysql Size (' . $databaseConfig['dbname'] . ')',
-            $status,
-            'Database size: ' . $sizeInMB . ' MB',
-            $sizeInMB . ' MB',
+        return new CheckResult(
+            $identifier,
+            LocalizationUtility::translate("check.{$identifier}.label", 'typo3_ohdear_health_check'),
+            LocalizationUtility::translate("check.{$identifier}.notificationMessage", 'typo3_ohdear_health_check', [0]),
+            LocalizationUtility::translate("check.{$identifier}.shortSummary", 'typo3_ohdear_health_check', [0]),
+            CheckResult::STATUS_SKIPPED,
             []
         );
     }

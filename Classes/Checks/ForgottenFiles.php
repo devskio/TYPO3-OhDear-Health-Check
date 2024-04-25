@@ -4,6 +4,7 @@ namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class ForgottenFiles
@@ -11,13 +12,21 @@ use TYPO3\CMS\Core\Core\Environment;
  */
 class ForgottenFiles extends AbstractCheck
 {
-
     /**
-     * The identifier of the check.
+     * List of allowed files and folders.
      *
-     * @var string
+     * @var array
      */
-    const IDENTIFIER = 'forgottenFiles';
+    protected $allowedFiles = [
+        '.htaccess',
+        'index.php',
+        'license.txt',
+        'fileadmin',
+        'uploads',
+        'typo3',
+        'typo3conf',
+        'typo3temp',
+    ];
 
     /**
      * ForgottenFiles constructor.
@@ -28,14 +37,13 @@ class ForgottenFiles extends AbstractCheck
     {
         parent::__construct($configuration);
         if (
-            isset($this->configuration['allowedFilesWarningCustomCheckEnabled'])
-            && $this->configuration['allowedFilesWarningCustomCheckEnabled']
-            && isset($this->configuration['allowedFiles'])
+            $this->configuration['allowedFilesWarningCustomCheckEnabled']
             && !empty($this->configuration['allowedFiles'])
         ) {
-            $this->configuration['allowedFiles'] = array_map('trim', explode("\n", $this->configuration['allowedFiles']));
-        } else {
-            $this->configuration['allowedFiles'] = $this->getDefaultConfiguration()['allowedFiles'];
+            $this->allowedFiles = array_merge(
+                $this->allowedFiles,
+                array_map('trim', explode("\n", $this->configuration['allowedFiles'])),
+            );
         }
     }
 
@@ -46,35 +54,31 @@ class ForgottenFiles extends AbstractCheck
      */
     public function run(): CheckResult
     {
-        $items = $this->getItemsInRootDirectory();
-
         $count = 0;
-        foreach ($items as $item) {
-            if (!$this->isAllowedItem($item)) {
-                $this->forgottenFilesList[] = $item;
-                $count++;
+        $forgottenFilesList = [];
+        $items = $this->getItemsInRootDirectory();
+        $status = CheckResult::STATUS_SKIPPED;
+
+        if ($this->configuration['allowedFilesWarningCustomCheckEnabled']) {
+            foreach ($items as $item) {
+                if (!$this->isAllowedItem($item)) {
+                    $forgottenFilesList[] = $item;
+                    $count++;
+                }
             }
+
+            $status = ($count > 0) ? CheckResult::STATUS_FAILED : CheckResult::STATUS_OK;
         }
 
-        if ($count > 0) {
-            return $this->createHealthCheckResult(
-                'ForgottenFiles',
-                'Forgotten Files',
-                CheckResult::STATUS_FAILED,
-                sprintf('Found %d unallowed files or folders', $count),
-                sprintf('%d unallowed files', $count),
-                ['unallowed_files_list' => $this->forgottenFilesList]
-            );
-        } else {
-            return $this->createHealthCheckResult(
-                'ForgottenFiles',
-                'Forgotten Files',
-                CheckResult::STATUS_OK,
-                'No unallowed files or folders found',
-                'No unallowed files found',
-                []
-            );
-        }
+        $identifier = self::getIdentifier();
+        return new CheckResult(
+            $identifier,
+            LocalizationUtility::translate("check.{$identifier}.label", 'typo3_ohdear_health_check'),
+            LocalizationUtility::translate("check.{$identifier}.notificationMessage", 'typo3_ohdear_health_check', [$count]),
+            LocalizationUtility::translate("check.{$identifier}.shortSummary", 'typo3_ohdear_health_check', [$count]),
+            $status,
+            ['unallowed_files_list' => $forgottenFilesList]
+        );
     }
 
     /**
@@ -95,22 +99,11 @@ class ForgottenFiles extends AbstractCheck
      */
     private function isAllowedItem(string $item): bool
     {
-        $allowedFiles = array_merge($this->configuration['allowedFiles'], [
-            '.htaccess',
-            'index.php',
-            'license.txt',
-            'fileadmin',
-            'uploads',
-            'typo3',
-            'typo3conf',
-            'typo3temp',
-        ]);
-
         if ($item === '.' || $item === '..') {
             return true;
         }
 
-        foreach ($allowedFiles as $pattern) {
+        foreach ($this->allowedFiles as $pattern) {
             if (fnmatch($pattern, $item)) {
                 return true;
             }

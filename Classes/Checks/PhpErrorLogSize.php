@@ -3,6 +3,7 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class PhpErrorLogSize
@@ -10,24 +11,6 @@ use OhDear\HealthCheckResults\CheckResult;
  */
 class PhpErrorLogSize extends AbstractCheck
 {
-
-    /**
-     * The identifier of the check.
-     *
-     * @var string
-     */
-    const IDENTIFIER = 'phpErrorLogSize';
-
-    /**
-     * PhpErrorLogSize constructor.
-     *
-     * @param array $configuration
-     */
-    public function __construct(array $configuration)
-    {
-        parent::__construct($configuration);
-    }
-
     /**
      * Run the health check.
      *
@@ -35,61 +18,46 @@ class PhpErrorLogSize extends AbstractCheck
      */
     public function run(): CheckResult
     {
-        $errorLogPath = $this->getErrorLogFile();
-        if ($errorLogPath instanceof CheckResult) {
-            return $errorLogPath;
+        $errorLogFilesizeReadable = 'N/A';
+        $status = CheckResult::STATUS_SKIPPED;
+
+        if ($this->configuration['errorLogSizeWarningCustomCheckEnabled']) {
+            $errorLogPath = $this->getErrorLogFile();
+            if ($errorLogPath) {
+                $errorLogFilesize = filesize($errorLogPath);
+                $errorLogFilesizeReadable = $this->formatBytes($errorLogFilesize);
+                $status = $this->determineStatus(
+                    $errorLogFilesize,
+                    $this->configuration['errorLogSizeWarningThresholdError'],
+                    $this->configuration['errorLogSizeWarningThresholdWarning']
+                );
+            } else {
+                $status = CheckResult::STATUS_CRASHED;
+            }
         }
-        $errorLogFilesize = filesize($errorLogPath);
-        $errorLogFilesizeReadable = $this->formatBytes($errorLogFilesize);
 
-        $status = $this->determineStatus(
-            $errorLogFilesizeReadable,
-            $this->configuration['errorLogSizeWarningThresholdError'],
-            $this->configuration['errorLogSizeWarningThresholdWarning']
-        );
-
-        return $this->createHealthCheckResult(
-            'PHPErrorLogSize',
-            'PHP Error Log Size',
+        $identifier = self::getIdentifier();
+        return new CheckResult(
+            $identifier,
+            LocalizationUtility::translate("check.{$identifier}.label", 'typo3_ohdear_health_check'),
+            LocalizationUtility::translate("check.{$identifier}.notificationMessage", 'typo3_ohdear_health_check', [$errorLogFilesizeReadable]),
+            LocalizationUtility::translate("check.{$identifier}.shortSummary", 'typo3_ohdear_health_check', [$errorLogFilesizeReadable]),
             $status,
-            'Error Log Filesize: ' . $status . ' (' . $errorLogFilesizeReadable . ')',
-            $errorLogFilesizeReadable,
-            ['error_log_filesize' => $errorLogFilesizeReadable]
+            []
         );
     }
 
     /**
      *  Get Php Error Log File
      *
-     * @return CheckResult|string File or skipped result check
+     * @return bool|string File or false if file does not exist.
      */
-    private function getErrorLogFile (): CheckResult|string
+    private function getErrorLogFile(): bool|string
     {
         $errorLogPath = ini_get('error_log');
         if (!file_exists($errorLogPath)) {
-            return $this->createHealthCheckResult(
-                'PHPErrorLogSize',
-                'PHP Error Log Size',
-                CheckResult::STATUS_SKIPPED,
-                'Error Log File does not exist',
-                'SKIPPED',
-                ['error_log_filesize' => 'SKIPPED']
-            );
+            return false;
         }
         return $errorLogPath;
-    }
-
-    /**
-     * Default configuration for this check.
-     *
-     * @return array
-     */
-    public function getDefaultConfiguration(): array
-    {
-        return [
-            'errorLogSizeWarningCustomCheckEnabled' => true,
-            'errorLogSizeWarningThresholdError' => 10000000,
-            'errorLogSizeWarningThresholdWarning' => 5000000,
-        ];
     }
 }
