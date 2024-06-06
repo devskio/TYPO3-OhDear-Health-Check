@@ -40,6 +40,27 @@ routeEnhancers:
 4. Configure the desired alert thresholds and notification settings in OhDear.
 5. When an issue is detected, you will receive alerts through your preferred communication channels (e.g., email, Slack, SMS) based on your Oh Dear configuration.
 
+## Customization
+
+### Adding Custom Checks
+You can add custom checks by extending the `AbstractCheck` and registering your custom check(s) in the `ext_localconf.php` file.
+```php
+$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_ohdear_health_check']['checks'][] = \Vendor\MyExtension\HealthCheck\CustomCheck::class;
+```
+
+### Customizing Check Results Array
+You can customize the result array of all checks by listening to the `HealthCheckAfterRunEvent` event.
+```yaml
+# EXT:my_extension/Configuration/Services.yaml
+services:
+  # ...
+  MyVendor\MyExtension\EventListener\HealthCheckAfterRunEventListener:
+    tags:
+      - name: event.listener
+        method: handleEvent
+        identifier: 'myHealthCheckAfterRunEventListener'
+        event: Devskio\Typo3OhDearHealthCheck\Events\HealthCheckAfterRunEvent
+```
 ## Contributing
 
 Contributions to the TYPO3 OhDear Health Check Extension are welcome! If you encounter any bugs, have suggestions, or want to contribute new features, please submit a pull request or open an issue in the GitHub repository.

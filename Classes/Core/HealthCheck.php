@@ -1,7 +1,7 @@
 <?php
 namespace Devskio\Typo3OhDearHealthCheck\Core;
 
-use Devskio\Typo3OhDearHealthCheck\Events\CustomHealthCheckEvent;
+use Devskio\Typo3OhDearHealthCheck\Events\HealthCheckAfterRunEvent;
 use Devskio\Typo3OhDearHealthCheck\Checks\AbstractCheck;
 use OhDear\HealthCheckResults\CheckResults;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -11,7 +11,6 @@ use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class OhDearHealthCheck
@@ -86,7 +85,8 @@ class HealthCheck extends ActionController
         }
 
         // Dispatch event
-        $event = new CustomHealthCheckEvent($checkResults);
+        $event = new HealthCheckAfterRunEvent($checkResults);
+
         $this->eventDispatcher->dispatch($event);
 
         $result = $checkResults->toJson();

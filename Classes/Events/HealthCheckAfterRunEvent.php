@@ -4,7 +4,7 @@ namespace Devskio\Typo3OhDearHealthCheck\Events;
 use OhDear\HealthCheckResults\CheckResults;
 use Psr\EventDispatcher\StoppableEventInterface;
 
-class CustomHealthCheckEvent implements StoppableEventInterface
+class HealthCheckAfterRunEvent implements StoppableEventInterface
 {
     private CheckResults $checkResults;
     private bool $isPropagationStopped = false;
