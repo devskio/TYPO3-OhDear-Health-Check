@@ -10,8 +10,6 @@ services:
 
   Devskio\Typo3OhDearHealthCheck\Widgets\HealthcheckWidget:
     arguments:
-      $view: '@dashboard.views.widget'
-      $requestFactory: '@TYPO3\CMS\Core\Http\RequestFactory'
       $extensionConfiguration: '@TYPO3\CMS\Core\Configuration\ExtensionConfiguration'
     tags:
       - name: dashboard.widget

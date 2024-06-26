@@ -5,7 +5,6 @@ namespace Devskio\Typo3OhDearHealthCheck\Widgets;
 
 use OhDear\PhpSdk\OhDear;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Dashboard\Widgets\WidgetConfigurationInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetInterface;
@@ -14,44 +13,20 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class HealthcheckWidget implements WidgetInterface
 {
-    /**
-     * @var WidgetConfigurationInterface
-     */
-    private $configuration;
 
-    /**
-     * @var StandaloneView
-     */
-    private $view;
-
-    /**
-     * @var RequestFactory
-     */
-    private $requestFactory;
+    private OhDear $ohDear;
+    private int $siteId;
 
     /**
      * @var string
      */
-    private $summaryStatus;
+    private string $summaryStatus;
 
-
-    /**
-     * HealthcheckWidget constructor.
-     *
-     * @param WidgetConfigurationInterface $configuration
-     * @param StandaloneView $view
-     * @param RequestFactory $requestFactory
-     */
     public function __construct(
-        WidgetConfigurationInterface $configuration,
-        StandaloneView $view,
-        RequestFactory $requestFactory,
+        private readonly WidgetConfigurationInterface $configuration,
         ExtensionConfiguration $extensionConfiguration,
+        protected readonly ?StandaloneView $view = null,
     ) {
-        $this->configuration = $configuration;
-        $this->view = $view;
-        $this->requestFactory = $requestFactory;
-
         $this->ohDear = new OhDear($extensionConfiguration->get('typo3_ohdear_health_check')['ohDearApiKey']);
         $this->siteId = (int)$extensionConfiguration->get('typo3_ohdear_health_check')['ohDearSiteId'] ?? 0;
 
@@ -147,5 +122,10 @@ class HealthcheckWidget implements WidgetInterface
             default:
                 $this->summaryStatus = 'success';
         }
+    }
+
+    public function getOptions(): array
+    {
+        return [];
     }
 }

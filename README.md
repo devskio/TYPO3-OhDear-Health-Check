@@ -20,9 +20,10 @@ The TYPO3 OhDear Health Check Extension allows you to monitor the health and per
 ## Installation
 
 1. Run the following command to require the OhDear Health Check Extension via Composer: `composer require devskio/typo3_ohdear_health_check`
-2. Include the static TypoScript of the extension. `EXT:typo3_ohdear_health_check/Configuration/TypoScript/setup.typoscript`
-3. Once installed, go to the extension configuration settings and provide your Oh Dear API credentials together with Health Report Secret. Optionally, you can enable or disable the monitoring of specific checks together with setting the alert thresholds.
-4. [Optional] If you want to have nice Health Report URL, you can add a routeEnhancer for OhDear Health Check Extension in your site configuration yaml file.
+2. Compare and update the database table and field definitions
+3. Include the static TypoScript of the extension. `EXT:typo3_ohdear_health_check/Configuration/TypoScript/setup.typoscript`
+4. Once installed, go to the extension configuration settings and provide your Oh Dear API credentials together with Health Report Secret. Optionally, you can enable or disable the monitoring of specific checks together with setting the alert thresholds.
+5. [Optional] If you want to have nice Health Report URL, you can add a routeEnhancer for OhDear Health Check Extension in your site configuration yaml file.
 ```
 ...
 routeEnhancers:
