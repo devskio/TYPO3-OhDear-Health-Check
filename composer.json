@@ -6,7 +6,7 @@
     "TYPO3 CMS"
   ],
   "minimum-stability": "stable",
-  "version": "12.0.2",
+  "version": "12.1.0",
   "license": "GPL-2.0-or-later",
   "autoload": {
     "psr-4": {
@@ -31,8 +31,9 @@
     }
   },
   "require": {
-    "typo3/cms-core": "^12",
-    "typo3/cms-extbase": "^12",
-    "ohdearapp/health-check-results": "^1.0"
+    "typo3/cms-core": "^10 || ^11 || ^12",
+    "typo3/cms-extbase": "^10 || ^11 || ^12",
+    "ohdearapp/health-check-results": "^1.0",
+    "ohdearapp/ohdear-php-sdk": "^3.10"
   }
 }

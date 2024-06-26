@@ -1,19 +1,16 @@
 <?php
 namespace Devskio\Typo3OhDearHealthCheck\Core;
 
-use DateTime;
-use Devskio\Typo3OhDearHealthCheck\Service\OhDearHealthCheckService;
-use Devskio\Typo3OhDearHealthCheck\Traits\Injection\InjectOhDearHealthCheckService;
+use Devskio\Typo3OhDearHealthCheck\Events\HealthCheckAfterRunEvent;
+use Devskio\Typo3OhDearHealthCheck\Checks\AbstractCheck;
 use OhDear\HealthCheckResults\CheckResults;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use Devskio\Typo3OhDearHealthCheck\Events\CustomHealthCheckEvent;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use TYPO3\CMS\Core\Http\Response;
 
 /**
  * Class OhDearHealthCheck
@@ -21,19 +18,27 @@ use TYPO3\CMS\Core\Http\Response;
  */
 class HealthCheck extends ActionController
 {
-    use InjectOhDearHealthCheckService;
-
-    const CACHE_IDENTIFIER = 'typo3_ohdear_health_check';
+    /**
+     * @var int
+     */
+    const CACHE_LIFETIME_DEFAULT = 3600;
 
     /**
-     * @var OhDearHealthCheckService
+     * identifier
+     *
+     * @var string
      */
-    protected $healthCheckService;
+    const IDENTIFIER = 'typo3_ohdear_health_check';
 
     /**
      * @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
      */
     protected $cache;
+
+    /**
+     * @var int
+     */
+    protected $cachingTime;
 
     /**
      * @var EventDispatcherInterface
@@ -42,12 +47,13 @@ class HealthCheck extends ActionController
 
     public function __construct(
         private ExtensionConfiguration $extensionConfiguration,
-        OhDearHealthCheckService $healthCheckService,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
     ) {
-        $this->healthCheckService = $healthCheckService;
-        $this->cache = GeneralUtility::makeInstance(CacheManager::class)->getCache('typo3_ohdear_health_check');
+        $this->cache = GeneralUtility::makeInstance(CacheManager::class)->getCache(self::IDENTIFIER);
         $this->eventDispatcher = $eventDispatcher;
+
+        $config = $this->extensionConfiguration->get(self::IDENTIFIER);
+        $this->cachingTime = $config['cachingTime'] ?? self::CACHE_LIFETIME_DEFAULT;
     }
 
     /**
@@ -57,34 +63,39 @@ class HealthCheck extends ActionController
     public function run(string $content, array $conf, ServerRequestInterface $request): string
     {
         if (!$this->checkSecret($request)) {
-            $this->throwStatus(403, 'Forbidden');
+             $this->throwStatus(403, 'Forbidden');
         }
 
+        // Check if the result is cached
         if (isset($this->cache)) {
-            $cachedResult = $this->cache->get(self::CACHE_IDENTIFIER);
+            $cachedResult = $this->cache->get(self::IDENTIFIER);
             if ($cachedResult !== false) {
                 return $cachedResult;
             }
         }
 
-        $checkResults = new CheckResults(DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s')));
+        // Run all checks
+        $checkResults = new CheckResults(\DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s')));
 
-        $checkResults->addCheckResult($this->healthCheckService->getUsedDiskSpace());
-        $checkResults->addCheckResult($this->healthCheckService->checkPHPErrorLogSize());
-        $checkResults->addCheckResult($this->healthCheckService->getTYPO3VarFolderSize());
-        $checkResults->addCheckResult($this->healthCheckService->getMysqlSize());
-        $checkResults->addCheckResult($this->healthCheckService->scanDocumentRootForForgottenFiles());
-        $checkResults->addCheckResult($this->healthCheckService->getTYPO3DBLog());
-        $checkResults->addCheckResult($this->healthCheckService->getTYPO3Version());
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_ohdear_health_check']['checks'] as $checkClass) {
+            $classConfiguration = $this->extensionConfiguration->get(self::IDENTIFIER)[$checkClass::getIdentifier()] ?? [];
+            /** @var AbstractCheck $checkInstance */
+            $checkInstance = GeneralUtility::makeInstance($checkClass, $classConfiguration);
+            $checkResults->addCheckResult($checkInstance->run());
+        }
 
-        $event = new CustomHealthCheckEvent($checkResults);
+        // Dispatch event
+        $event = new HealthCheckAfterRunEvent($checkResults);
+
         $this->eventDispatcher->dispatch($event);
 
-        $result = $checkResults->toJson() ?? "";
+        $result = $checkResults->toJson();
 
+        // Cache the result
         if (isset($this->cache)) {
-            $this->cache->set(self::CACHE_IDENTIFIER, $result, [], 3600);
+            $this->cache->set(self::IDENTIFIER, $result, [], $this->cachingTime);
         }
+
         return $result;
     }
 
@@ -96,10 +107,9 @@ class HealthCheck extends ActionController
      */
     public function checkSecret(ServerRequestInterface $request): bool
     {
-        $extensionConfig = $this->extensionConfiguration->get('typo3_ohdear_health_check');
+        $extensionConfig = $this->extensionConfiguration->get(self::IDENTIFIER);
         $ohdearSecretConfig = $extensionConfig['ohdearHealthCheckSecret'];
         $ohdearSecretHeader = $request->getHeader('oh-dear-health-check-secret')[0] ?? '';
         return !empty($ohdearSecretConfig) && $ohdearSecretConfig === $ohdearSecretHeader;
     }
-
 }

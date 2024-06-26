@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2012-02-29T20:53:46Z" product-name="typo3_ohdear_health_check">
+        <header/>
+        <body>
+            <trans-unit id="mlang_tabs_tab">
+                <source>TYPO3-OhDear-Health-Check extension</source>
+            </trans-unit>
+            <trans-unit id="mlang_labels_tabdescr">
+                <source></source>
+            </trans-unit>
+            <trans-unit id="widget.title">
+                <source>Healthcheck Widget</source>
+            </trans-unit>
+            <trans-unit id="widget.description">
+                <source>This is a healthcheck report from the Oh Dear api.</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.secret">
+                <source>Health Report Secret</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.api_key">
+                <source>Oh Dear API Key</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.site_id">
+                <source>Oh Dear Site ID</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.caching_time">
+                <source>Caching Time</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.enable_disk_space">
+                <source>Enable Disk Space Check</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.disk_space.error_threshold">
+                <source>Disk Space Error Threshold (90%)</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.disk_space.warning_threshold">
+                <source>Disk Space Warning Threshold (75%)</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.enable_error_log_size">
+                <source>Enable error log size check</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.error_log_size.error">
+                <source>Error Log Size Error Threshold in bytes (500MB)</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.error_log_size.warning">
+                <source>Error Log Size Warning Threshold in bytes (50MB)</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.enable_error_log_size">
+                <source>Enable error log size check</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.var_folder_size">
+                <source>Var Folder Size Check</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.var_folder_size.error">
+                <source>Var Folder Size Error Threshold in bytes (500MB)</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.var_folder_size.warning">
+                <source>Var Folder Size Warning Threshold in bytes (50MB)</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.database">
+                <source>Database Size Check</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.database.error">
+                <source>Database Size Error Threshold in bytes (500MB)</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.database.warning">
+                <source>Database Size Warning Threshold in bytes (50MB)</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.allowed_files">
+                <source>Allowed Files</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.allowed_files_check">
+                <source>Allowed Files Check</source>
+            </trans-unit>
+            <trans-unit id="widget.tabs.healthcheck">
+                <source>Oh Dear</source>
+            </trans-unit>
+            <trans-unit id="widget.checks.labels.status">
+                <source>Status:</source>
+            </trans-unit>
+            <trans-unit id="widget.checks.labels.summary">
+                <source>Summary:</source>
+            </trans-unit>
+            <trans-unit id="widget.checks.labels.last_updated">
+                <source>Last Updated:</source>
+            </trans-unit>
+            <trans-unit id="widget.checks.labels.view_report">
+                <source>View the latest Report</source>
+            </trans-unit>
+            <trans-unit id="connection.error">
+                <source>Oh Dear Api Connection Failed</source>
+            </trans-unit>
+            <trans-unit id="connection.error.instructions">
+                <source>Please check your api credentials in typo3 settings for typo3_ohdear_health_check extension.</source>
+            </trans-unit>
+            <trans-unit id="summary_status">
+                <source>Summary status: </source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

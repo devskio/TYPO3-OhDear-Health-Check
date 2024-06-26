@@ -7,3 +7,18 @@ services:
 
   Devskio\Typo3OhDearHealthCheck\:
     resource: '../Classes/*'
+
+  Devskio\Typo3OhDearHealthCheck\Widgets\HealthcheckWidget:
+    arguments:
+      $view: '@dashboard.views.widget'
+      $requestFactory: '@TYPO3\CMS\Core\Http\RequestFactory'
+      $extensionConfiguration: '@TYPO3\CMS\Core\Configuration\ExtensionConfiguration'
+    tags:
+      - name: dashboard.widget
+        identifier: 'healthcheckWidget'
+        groupNames: 'healthCheck'
+        title: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.title'
+        description: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.description'
+        iconIdentifier: 'content-dashboard'
+        height: 'medium'
+        width: 'medium'
