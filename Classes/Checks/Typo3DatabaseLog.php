@@ -21,23 +21,17 @@ class Typo3DatabaseLog extends AbstractCheck
      */
     public function run(): CheckResult
     {
-        $credentials = $this->getMysqlCredentials();
         $identifier = self::getIdentifier();
         $numRecords = 0;
-        $status = CheckResult::STATUS_SKIPPED;
 
-        if ($credentials !== null) {
-            try {
-                $numRecords = $this->getNumRecords();
+        try {
+            $numRecords = $this->getNumRecords();
 
-                $message = LocalizationUtility::translate("check.{$identifier}.notificationMessage", 'typo3_ohdear_health_check', [$numRecords]);
-                $status = ($numRecords > 500) ? CheckResult::STATUS_FAILED : CheckResult::STATUS_OK;
-            } catch (\Exception $e) {
-                $message = LocalizationUtility::translate("check.{$identifier}.notificationMessage.error", 'typo3_ohdear_health_check', [$e->getMessage()]);
-                $status = CheckResult::STATUS_CRASHED;
-            }
-        } else {
-            $message = LocalizationUtility::translate("check.{$identifier}.notificationMessage.no_credentials", 'typo3_ohdear_health_check');
+            $message = LocalizationUtility::translate("check.{$identifier}.notificationMessage", 'typo3_ohdear_health_check', [$numRecords]);
+            $status = ($numRecords > 500) ? CheckResult::STATUS_FAILED : CheckResult::STATUS_OK;
+        } catch (\Exception $e) {
+            $message = LocalizationUtility::translate("check.{$identifier}.notificationMessage.error", 'typo3_ohdear_health_check', [$e->getMessage()]);
+            $status = CheckResult::STATUS_CRASHED;
         }
 
         return new CheckResult(
@@ -72,20 +66,6 @@ class Typo3DatabaseLog extends AbstractCheck
         $result = $query->execute();
 
         return $result->fetchOne();
-    }
-
-    /**
-     * Function to get MySQL credentials from TYPO3 LocalConfiguration.php file.
-     *
-     * @return array|null Returns an array containing MySQL credentials if available, otherwise null.
-     */
-    public function getMysqlCredentials(): ?array
-    {
-        $localConfigurationPath = GeneralUtility::getFileAbsFileName('typo3conf/LocalConfiguration.php');
-        $localConfiguration = include($localConfigurationPath);
-        $credentials = $localConfiguration['DB']['Connections']['Default'] ?? null;
-
-        return $credentials;
     }
 
     /**
