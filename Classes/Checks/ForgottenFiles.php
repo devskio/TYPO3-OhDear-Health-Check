@@ -20,9 +20,9 @@ class ForgottenFiles extends AbstractCheck
     protected $allowedFiles = [
         '.htaccess',
         'index.php',
-        'license.txt',
+        'robots.txt',
+        '_assets',
         'fileadmin',
-        'uploads',
         'typo3',
         'typo3conf',
         'typo3temp',
