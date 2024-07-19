@@ -60,4 +60,18 @@ class PhpErrorLogSize extends AbstractCheck
         }
         return $errorLogPath;
     }
+
+    /**
+     * Default configuration for this check.
+     *
+     * @return array
+     */
+    public function getDefaultConfiguration(): array
+    {
+        return [
+            'errorLogSizeWarningCustomCheckEnabled' => 1,
+            'errorLogSizeWarningThresholdError' => 500000000,
+            'errorLogSizeWarningThresholdWarning' => 50000000,
+        ];
+    }
 }
