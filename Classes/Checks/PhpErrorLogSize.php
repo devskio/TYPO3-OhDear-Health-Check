@@ -31,8 +31,6 @@ class PhpErrorLogSize extends AbstractCheck
                     $this->configuration['errorLogSizeWarningThresholdError'],
                     $this->configuration['errorLogSizeWarningThresholdWarning']
                 );
-            } else {
-                $status = CheckResult::STATUS_CRASHED;
             }
         }
 
