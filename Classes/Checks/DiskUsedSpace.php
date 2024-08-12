@@ -3,6 +3,7 @@
 namespace Devskio\Typo3OhDearHealthCheck\Checks;
 
 use OhDear\HealthCheckResults\CheckResult;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -45,13 +46,15 @@ class DiskUsedSpace extends AbstractCheck
      */
     private function calculateDiskUsage(): CheckResult|array
     {
-        $totalSpace = @disk_total_space('/');
+        $path = Environment::getPublicPath();
+
+        $totalSpace = @disk_total_space($path);
 
         if (!$totalSpace) {
             return $this->getEmptyResult(CheckResult::STATUS_CRASHED);
         }
 
-        $usedSpace = ($totalSpace - @disk_free_space('/')) ?? 0;
+        $usedSpace = ($totalSpace - @disk_free_space($path)) ?? 0;
         // Calculate the percentage with 2 decimal points
         $percentage = ($usedSpace / $totalSpace) * 100;
         $usedSpaceInPercentage = round($percentage, 2); // Round to 2 decimal places

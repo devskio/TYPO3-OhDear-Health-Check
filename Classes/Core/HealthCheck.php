@@ -66,16 +66,20 @@ class HealthCheck extends ActionController
              $this->throwStatus(403, 'Forbidden');
         }
 
+        $currentTime = \DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
+
         // Check if the result is cached
         if (isset($this->cache)) {
             $cachedResult = $this->cache->get(self::IDENTIFIER);
             if ($cachedResult !== false) {
+                $cachedResult['finishedAt'] = $currentTime->getTimestamp();
+
                 return $cachedResult;
             }
         }
 
         // Run all checks
-        $checkResults = new CheckResults(\DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s')));
+        $checkResults = new CheckResults($currentTime);
 
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_ohdear_health_check']['checks'] as $checkClass) {
             $classConfiguration = $this->extensionConfiguration->get(self::IDENTIFIER)[$checkClass::getIdentifier()] ?? [];
