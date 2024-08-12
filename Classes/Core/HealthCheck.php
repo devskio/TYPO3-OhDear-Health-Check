@@ -63,7 +63,7 @@ class HealthCheck extends ActionController
     public function run(string $content, array $conf, ServerRequestInterface $request): string
     {
         if (!$this->checkSecret($request)) {
-             $this->throwStatus(403, 'Forbidden');
+            $this->throwStatus(403, 'Forbidden');
         }
 
         $currentTime = \DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
@@ -72,9 +72,10 @@ class HealthCheck extends ActionController
         if (isset($this->cache)) {
             $cachedResult = $this->cache->get(self::IDENTIFIER);
             if ($cachedResult !== false) {
+                $cachedResult = json_decode($cachedResult, true);
                 $cachedResult['finishedAt'] = $currentTime->getTimestamp();
 
-                return $cachedResult;
+                return json_encode($cachedResult);
             }
         }
 
