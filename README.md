@@ -41,6 +41,20 @@ routeEnhancers:
 4. Configure the desired alert thresholds and notification settings in OhDear.
 5. When an issue is detected, you will receive alerts through your preferred communication channels (e.g., email, Slack, SMS) based on your Oh Dear configuration.
 
+## Widget
+
+You can add the OhDear Health Check widget to your TYPO3 dashboard. 
+Widget is using the OhDear API to fetch basic Oh Dear checks and custom Application health checks.
+
+In order to use the widget, you need to provide the Oh Dear API Key and Oh Dear Site ID in the extension configuration settings.
+
+![TYPO3 OhDear Health Check Widget](https://github.com/devskio/TYPO3-OhDear-Health-Check/blob/main/widget-add.png?raw=true)
+
+![TYPO3 OhDear Health Check Widget](https://github.com/devskio/TYPO3-OhDear-Health-Check/blob/main/widget.png?raw=true)
+
+
+
+
 ## Customization
 
 ### Adding Custom Checks
