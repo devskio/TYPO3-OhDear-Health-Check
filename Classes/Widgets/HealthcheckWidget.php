@@ -13,6 +13,16 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class HealthcheckWidget implements WidgetInterface
 {
+    const CHECKS_ENDPOINT_MAP = [
+        'uptime' => 'uptime/report',
+        'performance' => 'performance/report',
+        'certificate-health' => 'certificate-health/report',
+        'broken-links' => 'broken-links/report',
+        'cron' => 'scheduled-tasks/list',
+        'application-health' => 'application-health/run',
+        'dns' => 'dns/latest',
+        'domain' => 'domain/report',
+    ];
 
     private OhDear $ohDear;
     private int $siteId;
@@ -22,6 +32,13 @@ class HealthcheckWidget implements WidgetInterface
      */
     private string $summaryStatus;
 
+    /**
+     * HealthcheckWidget constructor.
+     *
+     * @param WidgetConfigurationInterface $configuration
+     * @param ExtensionConfiguration $extensionConfiguration
+     * @param StandaloneView $view
+     */
     public function __construct(
         private readonly WidgetConfigurationInterface $configuration,
         ExtensionConfiguration $extensionConfiguration,
@@ -46,12 +63,34 @@ class HealthcheckWidget implements WidgetInterface
      */
     public function renderWidgetContent(): string
     {
+        $this->view->assignMultiple([
+            'configuration' => $this->configuration,
+        ]);
         if ($GLOBALS['BE_USER']->isAdmin()) {
             try {
                 $applicationHealthChecks = $this->ohDear->applicationHealthChecks($this->siteId);
+
                 foreach ($applicationHealthChecks as $check) {
                     $this->controlSummaryStatus($check->status);
                 }
+
+                if (!empty($this->siteId) && isset($this->ohDear)) {
+                    $site = $this->ohDear->site($this->siteId);
+                }
+
+                foreach ($site->checks as $check) {
+                    $this->controlSummaryStatus($check->attributes['latest_run_result']);
+                    $check->type = $this->formatCheckType($check->type);
+                }
+
+                $this->view->assignMultiple([
+                    'applicationHealthResults' => $applicationHealthChecks ?? null,
+                    'basicChecks' => $site->checks ?? null,
+                    'siteId' => $this->siteId,
+                    'summaryStatus' => $this->summaryStatus,
+                    'checksEndpointMap' => self::CHECKS_ENDPOINT_MAP,
+                ]);
+
             } catch (\Exception $e) {
                 $this->view->assignMultiple([
                     'error' => [
@@ -67,22 +106,6 @@ class HealthcheckWidget implements WidgetInterface
             }
         }
 
-        if (!empty($this->siteId) && isset($this->ohDear)) {
-            $site = $this->ohDear->site($this->siteId);
-        }
-
-        foreach ($site->checks as $check) {
-            $this->controlSummaryStatus($check->attributes['latest_run_result']);
-            $check->type = $this->formatCheckType($check->type);
-        }
-
-        $this->view->assignMultiple([
-            'configuration' => $this->configuration,
-            'applicationHealthResults' => $applicationHealthChecks ?? null,
-            'basicChecks' => $site->checks ?? null,
-            'siteId' => $this->siteId,
-            'summaryStatus' => $this->summaryStatus
-        ]);
         return $this->view->render();
     }
 

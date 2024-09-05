@@ -75,18 +75,20 @@
             <trans-unit id="widget.tabs.healthcheck">
                 <source>Oh Dear</source>
             </trans-unit>
+
             <trans-unit id="widget.checks.labels.status">
-                <source>Status:</source>
+                <source>Status</source>
             </trans-unit>
             <trans-unit id="widget.checks.labels.summary">
-                <source>Summary:</source>
+                <source>Summary</source>
+            </trans-unit>
+            <trans-unit id="widget.checks.labels.last_result">
+                <source>Last result</source>
             </trans-unit>
             <trans-unit id="widget.checks.labels.last_updated">
-                <source>Last Updated:</source>
+                <source>Last updated</source>
             </trans-unit>
-            <trans-unit id="widget.checks.labels.view_report">
-                <source>View the latest Report</source>
-            </trans-unit>
+
             <trans-unit id="connection.error">
                 <source>Oh Dear Api Connection Failed</source>
             </trans-unit>

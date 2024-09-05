@@ -1,0 +1,40 @@
+<f:variable name="statusColor">
+  <f:switch expression="{status}">
+    <f:case value="succeeded">rgb(52 211 153)</f:case>
+    <f:case value="ok">rgb(52 211 153)</f:case>
+    <f:case value="failed">rgb(239 68 68)</f:case>
+    <f:case value="warning">#FFD600</f:case>
+    <f:defaultCase>rgb(96 165 250)</f:defaultCase>
+  </f:switch>
+</f:variable>
+<div class="col-md-6 pt-3 pb-2"
+     style="
+          border-bottom: 1px solid rgb(236, 241, 249);
+          {f:if(condition: iteration.isOdd, then:' border-right: 1px solid rgb(236, 241, 249);')}
+          {f:if(condition: isEnabled, else:' opacity: .3;')}
+    ">
+  <h2 class="fw-bold d-flex align-items-center mt-0">
+    <f:if condition="{isEnabled}">
+      <f:then>
+        <div style="
+                        width: 10px; height: 10px; border-radius: 10px;
+                        margin-right: 8px;
+                        background-color: {statusColor};
+                      ">
+        </div>
+        <a href="https://ohdear.app/sites/{siteId}/check/{checksEndpointMap.{type}}" target="_blank">
+          {label}
+        </a>
+      </f:then>
+      <f:else>
+        {label}
+      </f:else>
+    </f:if>
+
+  </h2>
+  <p style="color: rgb(101 118 141)">
+    {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.summary')}: {summary}<br>
+    {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.last_result')}: {result}<br>
+    {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.last_updated')}: {updatedAt}
+  </p>
+</div>
