@@ -3,72 +3,50 @@
 <f:section name="main">
   <div class="container">
     <f:if condition="{error}">
-      <div class="alert alert-danger d-flex align-items-center justify-content-center " role="alert">
-        <div>
-          <h1 class="alert-heading">{error.label}</h1>
-          <h4>{error.instructions}</h4>
-          <hr>
-          <small class="mb-0">{error.message}</small>
+      <f:then>
+        <f:render partial="Widget/Error" arguments="{error: error}" />
+      </f:then>
+      <f:else>
+        <div class="row">
+          <f:if condition="{basicChecks}">
+            <f:for each="{basicChecks}" as="basicCheck" iteration="iteration">
+              <f:render partial="Widget/Item" arguments="{
+                status: basicCheck.attributes.latest_run_result,
+                isEnabled: basicCheck.enabled,
+                label: basicCheck.label,
+                result: basicCheck.attributes.latest_run_result,
+                summary: basicCheck.summary,
+                type: basicCheck.type,
+                updatedAt: basicCheck.attributes.latest_run_ended_at,
+
+                checksEndpointMap: checksEndpointMap,
+                iteration: iteration,
+                siteId: siteId
+              }" />
+            </f:for>
+          </f:if>
+
+          <f:if condition="{applicationHealthResults}">
+            <f:for each="{applicationHealthResults}" as="checkResult" iteration="iteration">
+              <f:render partial="Widget/Item" arguments="{
+                status: checkResult.status,
+                isEnabled: 1,
+                label: checkResult.label,
+                result: checkResult.message,
+                summary: checkResult.shortSummary,
+                type: 'application-health',
+                updatedAt: checkResult.attributes.updated_at,
+
+                checksEndpointMap: checksEndpointMap,
+                iteration: iteration,
+                siteId: siteId
+              }" />
+            </f:for>
+          </f:if>
+
         </div>
-      </div>
+      </f:else>
     </f:if>
-
-    <div class="row">
-
-      <f:if condition="{basicChecks} && {applicationHealthResults}">
-        <h1>
-          {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:summary_status')}
-          <div class="spinner-grow text-{summaryStatus}" role="status"></div>
-        </h1>
-      </f:if>
-
-      <f:if condition="{basicChecks}">
-        <f:for each="{basicChecks}" as="basicCheckResult" iteration="iteration">
-          <div class="col-md-6">
-            <h2>{basicCheckResult.label}</h2>
-            <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.status')} {basicCheckResult.summary}
-            </p>
-            <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.summary')} {basicCheckResult.attributes.latest_run_result}
-            </p>
-            <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.last_updated')} {basicCheckResult.attributes.latest_run_ended_at}
-            </p>
-
-            <h4>
-              <a href="https://ohdear.app/sites/{siteId}/check/{basicCheckResult.type}/report" target="_blank">
-                {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.view_report')}
-              </a>
-            </h4>
-          </div>
-        </f:for>
-      </f:if>
-
-      <f:if condition="{applicationHealthResults}">
-        <f:for each="{applicationHealthResults}" as="checkResult" iteration="iteration">
-          <div class="col-md-6">
-            <h2>{checkResult.label}</h2>
-            <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.status')} {checkResult.status}
-            </p>
-            <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.summary')} {checkResult.message}
-            </p>
-            <p>
-              {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.last_updated')} {checkResult.attributes.updated_at}
-            </p>
-
-            <h4>
-              <a href="https://ohdear.app/sites/{siteId}/check/application-health/{checkResult.id}" target="_blank">
-                {f:translate(key: 'LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:widget.checks.labels.view_report')}
-              </a>
-            </h4>
-          </div>
-        </f:for>
-      </f:if>
-
-    </div>
   </div>
 </f:section>
 <f:section name="footer">
