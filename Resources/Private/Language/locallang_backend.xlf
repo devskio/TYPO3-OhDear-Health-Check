@@ -75,10 +75,16 @@
             <trans-unit id="widget.tabs.healthcheck">
                 <source>Oh Dear</source>
             </trans-unit>
-
+            <trans-unit id="ext_conf_template.labels.enable_scheduler_check">
+                <source>Enable scheduler task check</source>
+            </trans-unit>
+            <trans-unit id="ext_conf_template.labels.scheduler_check.error">
+                <source>Error task last execution overdue</source>
+            </trans-unit>
             <trans-unit id="widget.checks.labels.status">
                 <source>Status</source>
             </trans-unit>
+
             <trans-unit id="widget.checks.labels.summary">
                 <source>Summary</source>
             </trans-unit>

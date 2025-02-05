@@ -39,3 +39,9 @@ mySqlSize.databaseSizeWarningThresholdWarning=50000000
 forgottenFiles.allowedFilesWarningCustomCheckEnabled=1
 # cat=Allowed server files; type=user[Devskio\Typo3OhDearHealthCheck\UserFunction\CustomFields\Textarea->render]; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:ext_conf_template.labels.allowed_files
 forgottenFiles.allowedFiles=
+
+
+# cat=Scheduler task check; type=boolean; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:ext_conf_template.labels.enable_scheduler_check
+schedulerTaskCheck.schedulerTaskCheckWarningCustomCheckEnabled=1
+# cat=Scheduler task check; type=string; label=LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:ext_conf_template.labels.scheduler_check.error
+schedulerTaskCheck.schedulerTaskCheckWarningCustomCheckOverdueTreshHold=86400
