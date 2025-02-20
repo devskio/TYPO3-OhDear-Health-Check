@@ -40,10 +40,10 @@
                 <source>Enable error log size check</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.error_log_size.error">
-                <source>Error Log Size Error Threshold in bytes (500MB)</source>
+                <source>Error Log Size Error Threshold in MB</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.error_log_size.warning">
-                <source>Error Log Size Warning Threshold in bytes (50MB)</source>
+                <source>Error Log Size Warning Threshold in MB</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.enable_error_log_size">
                 <source>Enable error log size check</source>
@@ -52,19 +52,19 @@
                 <source>Var Folder Size Check</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.var_folder_size.error">
-                <source>Var Folder Size Error Threshold in bytes (500MB)</source>
+                <source>Var Folder Size Error Threshold in MB</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.var_folder_size.warning">
-                <source>Var Folder Size Warning Threshold in bytes (50MB)</source>
+                <source>Var Folder Size Warning Threshold in MB</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.database">
                 <source>Database Size Check</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.database.error">
-                <source>Database Size Error Threshold in bytes (500MB)</source>
+                <source>Database Size Error Threshold in MB</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.database.warning">
-                <source>Database Size Warning Threshold in bytes (50MB)</source>
+                <source>Database Size Warning Threshold in MB</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.allowed_files">
                 <source>Allowed Files</source>

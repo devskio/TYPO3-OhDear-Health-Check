@@ -11,6 +11,8 @@ use OhDear\HealthCheckResults\CheckResult;
 abstract class AbstractCheck
 {
 
+    protected $toBytesModifier = 1048576;
+
     /**
      * AbstractCheck constructor.
      *

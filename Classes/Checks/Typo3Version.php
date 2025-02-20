@@ -30,7 +30,7 @@ class Typo3Version extends AbstractCheck
             $typo3VersionInstalled = $this->getTYPO3VersionFromComposerLock();
             $typo3VersionLatest = $this->getLatestMinorTypo3Version($typo3VersionInstalled);
 
-            $status = $typo3VersionLatest === $typo3VersionInstalled ? CheckResult::STATUS_OK : CheckResult::STATUS_WARNING;
+            $status = version_compare($typo3VersionLatest, $typo3VersionInstalled) < 1  ? CheckResult::STATUS_OK : CheckResult::STATUS_WARNING;
             $message = LocalizationUtility::translate("check.{$identifier}.notificationMessage" . ($status === CheckResult::STATUS_OK ? '.ok' : ''), 'typo3_ohdear_health_check', [$typo3VersionInstalled, $typo3VersionLatest]);
         } catch (\Exception $e) {
             $status = CheckResult::STATUS_CRASHED;
