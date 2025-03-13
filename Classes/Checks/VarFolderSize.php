@@ -30,8 +30,8 @@ class VarFolderSize extends AbstractCheck
             if ($varFolderSize) {
                 $status = $this->determineStatus(
                     $varFolderSize,
-                    $this->configuration['varFolderSizeWarningThresholdError'] * $this->toBytesModifier,
-                    $this->configuration['varFolderSizeWarningThresholdWarning'] * $this->toBytesModifier
+                    $this->convertToBytes($this->configuration['varFolderSizeWarningThresholdError']),
+                    $this->convertToBytes($this->configuration['varFolderSizeWarningThresholdWarning'])
                 );
             } else {
                 $status = CheckResult::STATUS_CRASHED;
@@ -88,8 +88,8 @@ class VarFolderSize extends AbstractCheck
     {
         return [
             'varFolderSizeWarningCustomCheckEnabled' => true,
-            'varFolderSizeWarningThresholdError' => 500,
-            'varFolderSizeWarningThresholdWarning' => 50,
+            'varFolderSizeWarningThresholdError' => '500MB',
+            'varFolderSizeWarningThresholdWarning' => '50MB',
         ];
     }
 }

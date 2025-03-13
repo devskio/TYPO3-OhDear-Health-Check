@@ -71,7 +71,7 @@ class SchedulerTaskCheck extends AbstractCheck
             ->getConnectionForTable('tx_scheduler_task');
 
         $queryBuilder = $connection->createQueryBuilder();
-        $thresholdTime = time() - $this->configuration['SchedulerTaskCheckWarningCustomCheckOverdueTreshHold']; // Define overdue threshold (e.g., 1 hour)
+        $thresholdTime = time() - $this->convertToSeconds($this->configuration['SchedulerTaskCheckWarningCustomCheckOverdueTreshHold']); // Define overdue threshold (e.g., 1 hour)
 
         return $queryBuilder
             ->select('uid', 'lastexecution_time', 'nextexecution', 'lastexecution_failure', 'disable')
@@ -109,7 +109,7 @@ class SchedulerTaskCheck extends AbstractCheck
     {
         return [
             'SchedulerTaskCheckWarningCustomCheckEnabled' => true,
-            'SchedulerTaskCheckWarningCustomCheckOverdueTreshHold' => 86400,
+            'SchedulerTaskCheckWarningCustomCheckOverdueTreshHold' => '24H',
         ];
     }
 

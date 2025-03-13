@@ -28,8 +28,8 @@ class PhpErrorLogSize extends AbstractCheck
                 $errorLogFilesizeReadable = $this->formatBytes($errorLogFilesize);
                 $status = $this->determineStatus(
                     $errorLogFilesize,
-                    $this->configuration['errorLogSizeWarningThresholdError'] * $this->toBytesModifier,
-                    $this->configuration['errorLogSizeWarningThresholdWarning'] * $this->toBytesModifier
+                    $this->convertToBytes($this->configuration['errorLogSizeWarningThresholdError']),
+                        $this->convertToBytes($this->configuration['errorLogSizeWarningThresholdWarning'])
                 );
             }
         }
@@ -68,8 +68,8 @@ class PhpErrorLogSize extends AbstractCheck
     {
         return [
             'errorLogSizeWarningCustomCheckEnabled' => 1,
-            'errorLogSizeWarningThresholdError' => 500,
-            'errorLogSizeWarningThresholdWarning' => 50,
+            'errorLogSizeWarningThresholdError' => '500MB',
+            'errorLogSizeWarningThresholdWarning' => '50MB',
         ];
     }
 }
