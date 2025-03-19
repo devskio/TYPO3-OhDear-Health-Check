@@ -20,6 +20,7 @@ call_user_func(function ($extKey) {
             \Devskio\Typo3OhDearHealthCheck\Checks\Typo3DatabaseLog::class,
             \Devskio\Typo3OhDearHealthCheck\Checks\Typo3Version::class,
             \Devskio\Typo3OhDearHealthCheck\Checks\VarFolderSize::class,
+            \Devskio\Typo3OhDearHealthCheck\Checks\SchedulerTaskCheck::class,
         ],
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_ohdear_health_check']['checks'] ?? []
     );

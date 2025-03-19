@@ -65,6 +65,20 @@
         <source>%s</source>
       </trans-unit>
 
+      <!-- SchedulerTaskCheck -->
+      <trans-unit id="check.schedulerTaskCheck.label">
+        <source>Scheduler Task check</source>
+      </trans-unit>
+      <trans-unit id="check.schedulerTaskCheck.notificationMessage">
+        <source>Number overdue tasks: %s Number of failed tasks: %s</source>
+      </trans-unit>
+      <trans-unit id="check.schedulerTaskCheck.shortSummary">
+        <source>%s</source>
+      </trans-unit>
+      <trans-unit id="check.schedulerTaskCheck.notificationMessage.error">
+        <source>Error executing the database query: %s</source>
+      </trans-unit>
+
       <!-- Typo3Version -->
       <trans-unit id="check.typo3Version.label">
         <source>TYPO3 Version</source>
@@ -98,9 +112,6 @@
       <trans-unit id="check.varFolderSize.shortSummary">
         <source>TYPO3 Var Folder Size: %s</source>
       </trans-unit>
-
-
-
 
     </body>
   </file>

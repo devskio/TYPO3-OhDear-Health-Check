@@ -34,8 +34,8 @@ class MySqlSize extends AbstractCheck
 
                     $status = $this->determineStatus(
                         $sizeInBytes,
-                        $this->configuration['databaseSizeWarningThresholdError'],
-                        $this->configuration['databaseSizeWarningThresholdWarning']
+                        $this->convertToBytes($this->configuration['databaseSizeWarningThresholdError']),
+                            $this->convertToBytes($this->configuration['databaseSizeWarningThresholdWarning'])
                     );
 
                     $biggestTables = $this->getBiggestTables($databaseConfiguration, $databaseConfig['dbname']);
@@ -153,8 +153,8 @@ class MySqlSize extends AbstractCheck
     {
         return [
             'databaseSizeWarningCustomCheckEnabled' => true,
-            'databaseSizeWarningThresholdError' => 5000000000,
-            'databaseSizeWarningThresholdWarning' => 500000000,
+            'databaseSizeWarningThresholdError' => '500MB',
+            'databaseSizeWarningThresholdWarning' => '50MB',
         ];
     }
 }
