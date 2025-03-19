@@ -10,7 +10,6 @@ use OhDear\HealthCheckResults\CheckResult;
  */
 abstract class AbstractCheck
 {
-
     /**
      * AbstractCheck constructor.
      *
@@ -37,7 +36,7 @@ abstract class AbstractCheck
      */
     protected function formatBytes(float $bytes, int $precision = 2): string
     {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $units = ['B', 'KB', 'MB', 'GB', 'TB']; /// upravit na MB, GB, TB pripominu
         $bytes = max($bytes, 0);
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
         $pow = min($pow, count($units) - 1);
@@ -45,6 +44,55 @@ abstract class AbstractCheck
         $bytes /= (1 << (10 * $pow));
 
         return round($bytes, $precision) . ' ' . $units[$pow];
+    }
+
+    /**
+     * Function to change human-readable format in KB,MB,GB,TB to bytes.
+     *
+     * @param mixed $size The size from input.
+     * @return float The size in bytes.
+     */
+    protected function convertToBytes(mixed $size): float
+    {
+        $size = trim($size);
+        $unit = strtoupper(substr($size, -2));
+        $value = (float) trim(substr($size, 0, -2));
+
+        switch ($unit) {
+            case 'KB':
+                return $value * 1024;
+            case 'MB':
+                return $value * 1024 * 1024;
+            case 'GB':
+                return $value * 1024 * 1024 * 1024;
+            case 'TB':
+                return $value * 1024 * 1024 * 1024 * 1024;
+            default:
+                return (float)$size;
+        }
+    }
+
+    /**
+     * Function to change human-readable format of time in days, hours or minutes into seconds.
+     *
+     * @param mixed $time The time from input.
+     * @return float The time in seconds.
+     */
+    function convertToSeconds($time) {
+        $time = trim($time);
+        $unit = strtoupper(substr($time, -1));
+        $value = (float) trim(substr($time, 0, -1));
+
+        switch ($unit) {
+            case 'M':
+                return $value * 60;
+            case 'H':
+                return $value * 60 * 60;
+            case 'D':
+                return $value * 60 * 60 * 24;
+            default:
+                return (float)$time;
+        }
     }
 
     /**
