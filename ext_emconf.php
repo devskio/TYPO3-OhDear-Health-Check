@@ -6,10 +6,10 @@ $EM_CONF['typo3_ohdear_health_check'] = [
     'author' => 'DEVSK.io',
     'author_email' => 'development@devsk.io',
     'state' => 'stable',
-    'version' => '12.4.3',
+    'version' => '13.4.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '10.0.0-12.4.99',
+            'typo3' => '13.0.0-13.4.99',
         ],
         'conflicts' => [
         ],

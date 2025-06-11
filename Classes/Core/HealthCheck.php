@@ -7,6 +7,7 @@ use OhDear\HealthCheckResults\CheckResults;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -21,29 +22,29 @@ class HealthCheck extends ActionController
     /**
      * @var int
      */
-    const CACHE_LIFETIME_DEFAULT = 3600;
+    const int CACHE_LIFETIME_DEFAULT = 3600;
 
     /**
      * identifier
      *
      * @var string
      */
-    const IDENTIFIER = 'typo3_ohdear_health_check';
+    const string IDENTIFIER = 'typo3_ohdear_health_check';
 
     /**
-     * @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+     * @var FrontendInterface
      */
-    protected $cache;
+    protected FrontendInterface $cache;
 
     /**
      * @var int
      */
-    protected $cachingTime;
+    protected int $cachingTime;
 
     /**
      * @var EventDispatcherInterface
      */
-    protected $eventDispatcher;
+    protected EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         private ExtensionConfiguration $extensionConfiguration,

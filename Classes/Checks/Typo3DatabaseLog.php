@@ -63,7 +63,7 @@ class Typo3DatabaseLog extends AbstractCheck
                 $queryBuilder->expr()->gte('tstamp', $queryBuilder->createNamedParameter($oneMonthAgo))
             );
 
-        $result = $query->execute();
+        $result = $query->executeQuery();
 
         return $result->fetchOne();
     }

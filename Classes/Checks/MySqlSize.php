@@ -83,7 +83,7 @@ class MySqlSize extends AbstractCheck
             )
             ->groupBy('table_schema');
 
-        $result = $query->execute();
+        $result = $query->executeQuery();
         $databaseSize = $result->fetchAssociative();
 
         return $databaseSize ? (int)$databaseSize['size'] : 0;
@@ -101,7 +101,7 @@ class MySqlSize extends AbstractCheck
         $queryBuilder = $this->createQueryBuilder($connectionName);
         $query = $this->createBiggestTablesQuery($queryBuilder, $databaseName);
 
-        $result = $query->execute()->fetchAllAssociative();
+        $result = $query->executeQuery()->fetchAllAssociative();
         $biggestTables = [];
         foreach ($result as $row) {
             $biggestTables[$row['Table']] = $row['Size (MB)'] . ' MB';

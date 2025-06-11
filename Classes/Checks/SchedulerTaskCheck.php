@@ -78,7 +78,7 @@ class SchedulerTaskCheck extends AbstractCheck
             ->select('uid', 'lastexecution_time', 'nextexecution', 'lastexecution_failure', 'disable')
             ->from('tx_scheduler_task')
             ->where(
-                $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->or(
                     $queryBuilder->expr()->notLike('lastexecution_failure', '""'),
                     $queryBuilder->expr()->lt('nextexecution', $thresholdTime)
                 )
