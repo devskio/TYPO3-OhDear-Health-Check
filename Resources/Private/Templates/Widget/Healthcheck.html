@@ -11,13 +11,13 @@
           <f:if condition="{basicChecks}">
             <f:for each="{basicChecks}" as="basicCheck" iteration="iteration">
               <f:render partial="Widget/Item" arguments="{
-                status: basicCheck.attributes.latest_run_result,
+                status: basicCheck.latest_run_result,
                 isEnabled: basicCheck.enabled,
                 label: basicCheck.label,
-                result: basicCheck.attributes.latest_run_result,
+                result: basicCheck.latest_run_result,
                 summary: basicCheck.summary,
                 type: basicCheck.type,
-                updatedAt: basicCheck.attributes.latest_run_ended_at,
+                updatedAt: basicCheck.latest_run_ended_at,
 
                 checksEndpointMap: checksEndpointMap,
                 iteration: iteration,

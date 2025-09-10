@@ -22,7 +22,7 @@
                 <source>Oh Dear API Key</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.site_id">
-                <source>Oh Dear Site ID</source>
+                <source>Oh Dear monitor ID</source>
             </trans-unit>
             <trans-unit id="ext_conf_template.labels.caching_time">
                 <source>Caching Time</source>
