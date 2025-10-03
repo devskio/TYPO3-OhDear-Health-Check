@@ -27,7 +27,12 @@ class HealthcheckWidget implements WidgetInterface, RequestAwareWidgetInterface
 
     private OhDear $ohDear;
     private int $siteId;
-    private string $summaryStatus = '';
+
+    /**
+     * @var string
+     */
+    private string $summaryStatus = 'success';
+
 
     /**
      * HealthcheckWidget constructor.
@@ -47,6 +52,18 @@ class HealthcheckWidget implements WidgetInterface, RequestAwareWidgetInterface
     public function setRequest(ServerRequestInterface $request): void
     {
         $this->request = $request;
+
+        $this->view->setTemplateRootPaths(
+            [GeneralUtility::getFileAbsFileName('EXT:typo3_ohdear_health_check/Resources/Private/Templates')]
+        );
+        $this->view->setLayoutRootPaths(
+            [GeneralUtility::getFileAbsFileName('EXT:typo3_ohdear_health_check/Resources/Private/Layouts')]
+        );
+        $this->view->setPartialRootPaths(
+            [GeneralUtility::getFileAbsFileName('EXT:typo3_ohdear_health_check/Resources/Private/Partials')]
+        );
+        $this->view->setTemplate('Widget/Healthcheck');
+
     }
 
     /**
@@ -62,19 +79,19 @@ class HealthcheckWidget implements WidgetInterface, RequestAwareWidgetInterface
         ]);
         if ($GLOBALS['BE_USER']->isAdmin()) {
             try {
-                $applicationHealthChecks = $this->ohDear->applicationHealthChecks($this->siteId);
 
+                $applicationHealthChecks = $this->ohDear->applicationHealthChecks($this->siteId);
                 foreach ($applicationHealthChecks as $check) {
                     $this->controlSummaryStatus($check->status);
                 }
 
                 if (!empty($this->siteId) && isset($this->ohDear)) {
-                    $site = $this->ohDear->site($this->siteId);
+                    $site = $this->ohDear->monitor($this->siteId);
                 }
 
                 foreach ($site->checks as $check) {
-                    $this->controlSummaryStatus($check->attributes['latest_run_result']);
-                    $check->type = $this->formatCheckType($check->type);
+                    $this->controlSummaryStatus($check['latest_run_result']);
+                    $check['type'] = $this->formatCheckType($check['type']);
                 }
 
                 $view->assignMultiple([

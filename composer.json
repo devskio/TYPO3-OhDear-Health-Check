@@ -34,6 +34,6 @@
     "typo3/cms-core": "^13",
     "typo3/cms-extbase": "^13",
     "ohdearapp/health-check-results": "^1.0",
-    "ohdearapp/ohdear-php-sdk": "^3.10"
+    "ohdearapp/ohdear-php-sdk": "^4"
   }
 }
