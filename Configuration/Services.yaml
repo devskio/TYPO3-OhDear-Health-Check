@@ -8,9 +8,16 @@ services:
   Devskio\Typo3OhDearHealthCheck\:
     resource: '../Classes/*'
 
+  Devskio\Typo3OhDearHealthCheck\Middleware\HealthCheckMiddleware:
+    arguments:
+      $healthCheck: '@Devskio\Typo3OhDearHealthCheck\Core\HealthCheck'
+      $responseFactory: '@Psr\Http\Message\ResponseFactoryInterface'
+    public: true
+
   Devskio\Typo3OhDearHealthCheck\Widgets\HealthcheckWidget:
     arguments:
       $extensionConfiguration: '@TYPO3\CMS\Core\Configuration\ExtensionConfiguration'
+      $viewFactory: '@TYPO3\CMS\Core\View\ViewFactoryInterface'
     tags:
       - name: dashboard.widget
         identifier: 'healthcheckWidget'

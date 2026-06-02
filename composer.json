@@ -6,7 +6,7 @@
     "TYPO3 CMS"
   ],
   "minimum-stability": "stable",
-  "version": "13.4.2",
+  "version": "14.0.0",
   "license": "GPL-2.0-or-later",
   "autoload": {
     "psr-4": {
@@ -31,8 +31,8 @@
     }
   },
   "require": {
-    "typo3/cms-core": "^13",
-    "typo3/cms-extbase": "^13",
+    "typo3/cms-core": "^14",
+    "typo3/cms-extbase": "^14",
     "ohdearapp/health-check-results": "^1.0",
     "ohdearapp/ohdear-php-sdk": "^4"
   }

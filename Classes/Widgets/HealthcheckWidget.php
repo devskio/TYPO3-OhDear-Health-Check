@@ -5,12 +5,13 @@ namespace Devskio\Typo3OhDearHealthCheck\Widgets;
 
 use OhDear\PhpSdk\OhDear;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Dashboard\Widgets\RequestAwareWidgetInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetConfigurationInterface;
 use TYPO3\CMS\Dashboard\Widgets\WidgetInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class HealthcheckWidget implements WidgetInterface, RequestAwareWidgetInterface
 {
@@ -27,32 +28,23 @@ class HealthcheckWidget implements WidgetInterface, RequestAwareWidgetInterface
 
     private OhDear $ohDear;
     private int $siteId;
-    private StandaloneView $view;
     private string $summaryStatus = 'success';
+    private ?ServerRequestInterface $request = null;
 
     /**
      * HealthcheckWidget constructor.
      *
      * @param WidgetConfigurationInterface $configuration
+     * @param ViewFactoryInterface $viewFactory
      * @param ExtensionConfiguration $extensionConfiguration
      */
     public function __construct(
         private readonly WidgetConfigurationInterface $configuration,
+        private readonly ViewFactoryInterface $viewFactory,
         ExtensionConfiguration $extensionConfiguration,
     ) {
         $this->ohDear = new OhDear($extensionConfiguration->get('typo3_ohdear_health_check')['ohDearApiKey']);
         $this->siteId = (int)$extensionConfiguration->get('typo3_ohdear_health_check')['ohDearSiteId'] ?? 0;
-        $this->view = new StandaloneView();
-        $this->view->setTemplateRootPaths([
-            'EXT:typo3_ohdear_health_check/Resources/Private/Templates'
-        ]);
-        $this->view->setLayoutRootPaths([
-            'EXT:typo3_ohdear_health_check/Resources/Private/Layouts'
-        ]);
-        $this->view->setPartialRootPaths([
-            'EXT:typo3_ohdear_health_check/Resources/Private/Partials'
-        ]);
-        $this->view->setTemplate('Widget/Healthcheck');
     }
 
     public function setRequest(ServerRequestInterface $request): void
@@ -67,12 +59,20 @@ class HealthcheckWidget implements WidgetInterface, RequestAwareWidgetInterface
      */
     public function renderWidgetContent(): string
     {
-        $this->view->assignMultiple([
+        $view = $this->viewFactory->create(new ViewFactoryData(
+            templateRootPaths: ['EXT:typo3_ohdear_health_check/Resources/Private/Templates/'],
+            partialRootPaths: ['EXT:typo3_ohdear_health_check/Resources/Private/Partials/'],
+            layoutRootPaths: ['EXT:typo3_ohdear_health_check/Resources/Private/Layouts/'],
+            templateName: 'Widget/Healthcheck',
+            request: $this->request,
+        ));
+
+        $view->assignMultiple([
             'configuration' => $this->configuration,
         ]);
+
         if ($GLOBALS['BE_USER']->isAdmin()) {
             try {
-
                 $applicationHealthChecks = $this->ohDear->applicationHealthChecks($this->siteId);
                 foreach ($applicationHealthChecks as $check) {
                     $this->controlSummaryStatus($check->status);
@@ -87,26 +87,25 @@ class HealthcheckWidget implements WidgetInterface, RequestAwareWidgetInterface
                     $check['type'] = $this->formatCheckType($check['type']);
                 }
 
-                $this->view->assignMultiple([
+                $view->assignMultiple([
                     'applicationHealthResults' => $applicationHealthChecks ?? null,
                     'basicChecks' => $site->checks ?? null,
                     'siteId' => $this->siteId,
                     'summaryStatus' => $this->summaryStatus,
                     'checksEndpointMap' => self::CHECKS_ENDPOINT_MAP,
                 ]);
-
             } catch (\Exception $e) {
-                $this->view->assignMultiple([
+                $view->assignMultiple([
                     'error' => [
-                        'label' => $GLOBALS['LANG']->sL('LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:connection.error'),
-                        'instructions' => $GLOBALS['LANG']->sL('LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:connection.error.instructions'),
-                        'message' => $e->getMessage()
-                    ]
+                        'label' => LocalizationUtility::translate('LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:connection.error'),
+                        'instructions' => LocalizationUtility::translate('LLL:EXT:typo3_ohdear_health_check/Resources/Private/Language/locallang_backend.xlf:connection.error.instructions'),
+                        'message' => $e->getMessage(),
+                    ],
                 ]);
             }
         }
 
-        return $this->view->render();
+        return $view->render();
     }
 
     /**

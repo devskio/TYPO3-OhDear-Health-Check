@@ -1,20 +1,4 @@
-typo3_oh_dear_health_check = PAGE
-typo3_oh_dear_health_check {
-    typeNum = 1689678601
-
-    config {
-        no_cache = 1
-        disableAllHeaderCode = 1
-        admPanel = 0
-        removeDefaultJS = 1
-        removeDefaultCss = 1
-        removePageCss = 1
-        additionalHeaders {
-            10.header = Content-Type:application/json;charset=utf-8
-            20.header = X-Robots-Tag:noindex
-        }
-    }
-
-    10 = USER
-    10.userFunc = Devskio\Typo3OhDearHealthCheck\Core\HealthCheck->run
-}
+# The Oh Dear health-check endpoint is handled by
+# Devskio\Typo3OhDearHealthCheck\Middleware\HealthCheckMiddleware
+# via Configuration/RequestMiddlewares.php.
+# No TypoScript PAGE setup is required for TYPO3 14.

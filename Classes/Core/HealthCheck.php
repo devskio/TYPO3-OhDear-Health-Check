@@ -8,42 +8,20 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
-use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 /**
- * Class OhDearHealthCheck
- * @package Devskio\Typo3OhDearHealthCheck\Controller
+ * Class HealthCheck
+ * @package Devskio\Typo3OhDearHealthCheck\Core
  */
-class HealthCheck extends ActionController
+class HealthCheck
 {
-    /**
-     * @var int
-     */
     const int CACHE_LIFETIME_DEFAULT = 3600;
-
-    /**
-     * identifier
-     *
-     * @var string
-     */
     const string IDENTIFIER = 'typo3_ohdear_health_check';
 
-    /**
-     * @var FrontendInterface
-     */
     protected FrontendInterface $cache;
-
-    /**
-     * @var int
-     */
     protected int $cachingTime;
-
-    /**
-     * @var EventDispatcherInterface
-     */
     protected EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
@@ -58,29 +36,22 @@ class HealthCheck extends ActionController
     }
 
     /**
-     * Action to perform the health check and return the data as JSON.
-     * @throws PropagateResponseException
+     * Execute all registered health checks and return the JSON result.
+     * Called by HealthCheckMiddleware.
      */
-    public function run(string $content, array $conf, ServerRequestInterface $request): string
+    public function executeChecks(): string
     {
-        if (!$this->checkSecret($request)) {
-            $this->throwStatus(403, 'Forbidden');
-        }
-
         $currentTime = \DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
 
-        // Check if the result is cached
         if (isset($this->cache)) {
             $cachedResult = $this->cache->get(self::IDENTIFIER);
             if ($cachedResult !== false) {
                 $cachedResult = json_decode($cachedResult, true);
                 $cachedResult['finishedAt'] = $currentTime->getTimestamp();
-
                 return json_encode($cachedResult);
             }
         }
 
-        // Run all checks
         $checkResults = new CheckResults($currentTime);
 
         foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['typo3_ohdear_health_check']['checks'] as $checkClass) {
@@ -90,14 +61,11 @@ class HealthCheck extends ActionController
             $checkResults->addCheckResult($checkInstance->run());
         }
 
-        // Dispatch event
         $event = new HealthCheckAfterRunEvent($checkResults);
-
         $this->eventDispatcher->dispatch($event);
 
         $result = $checkResults->toJson();
 
-        // Cache the result
         if (isset($this->cache)) {
             $this->cache->set(self::IDENTIFIER, $result, [], $this->cachingTime);
         }
@@ -105,11 +73,8 @@ class HealthCheck extends ActionController
         return $result;
     }
 
-
     /**
-     * Check if the secret is set and matches the one from the request header.
-     * @param ServerRequestInterface $request
-     * @return bool
+     * Verify the Oh Dear secret header against the configured value.
      */
     public function checkSecret(ServerRequestInterface $request): bool
     {
