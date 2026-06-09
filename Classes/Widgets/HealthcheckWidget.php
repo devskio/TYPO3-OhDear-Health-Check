@@ -5,6 +5,7 @@ namespace Devskio\Typo3OhDearHealthCheck\Widgets;
 
 use OhDear\PhpSdk\OhDear;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -63,7 +64,9 @@ class HealthcheckWidget implements WidgetInterface, RequestAwareWidgetInterface
             templateRootPaths: ['EXT:typo3_ohdear_health_check/Resources/Private/Templates/'],
             partialRootPaths: ['EXT:typo3_ohdear_health_check/Resources/Private/Partials/'],
             layoutRootPaths: ['EXT:typo3_ohdear_health_check/Resources/Private/Layouts/'],
-            templateName: 'Widget/Healthcheck',
+            templatePathAndFilename: GeneralUtility::getFileAbsFileName(
+                'EXT:typo3_ohdear_health_check/Resources/Private/Templates/Widget/Healthcheck.html'
+            ),
             request: $this->request,
         ));
 

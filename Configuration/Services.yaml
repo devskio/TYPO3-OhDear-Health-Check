@@ -12,6 +12,7 @@ services:
     arguments:
       $healthCheck: '@Devskio\Typo3OhDearHealthCheck\Core\HealthCheck'
       $responseFactory: '@Psr\Http\Message\ResponseFactoryInterface'
+      $extensionConfiguration: '@TYPO3\CMS\Core\Configuration\ExtensionConfiguration'
     public: true
 
   Devskio\Typo3OhDearHealthCheck\Widgets\HealthcheckWidget:

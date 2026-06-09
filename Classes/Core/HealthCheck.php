@@ -81,6 +81,6 @@ class HealthCheck
         $extensionConfig = $this->extensionConfiguration->get(self::IDENTIFIER);
         $ohdearSecretConfig = $extensionConfig['ohdearHealthCheckSecret'];
         $ohdearSecretHeader = $request->getHeader('oh-dear-health-check-secret')[0] ?? '';
-        return !empty($ohdearSecretConfig) && $ohdearSecretConfig === $ohdearSecretHeader;
+        return empty($ohdearSecretConfig) || $ohdearSecretConfig === $ohdearSecretHeader;
     }
 }

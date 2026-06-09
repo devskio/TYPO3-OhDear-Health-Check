@@ -18,6 +18,9 @@
             <trans-unit id="ext_conf_template.labels.secret">
                 <source>Health Report Secret</source>
             </trans-unit>
+            <trans-unit id="ext_conf_template.labels.health_check_path">
+                <source>Health Check URL Path (e.g. /healthcheck)</source>
+            </trans-unit>
             <trans-unit id="ext_conf_template.labels.api_key">
                 <source>Oh Dear API Key</source>
             </trans-unit>
