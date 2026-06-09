@@ -11,6 +11,11 @@ use OhDear\HealthCheckResults\CheckResult;
 abstract class AbstractCheck
 {
     /**
+     * @var array
+     */
+    protected array $configuration = [];
+
+    /**
      * AbstractCheck constructor.
      *
      * @param array $configuration
